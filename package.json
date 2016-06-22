@@ -1,0 +1,26 @@
+{
+  "name": "slack-lunch-shuffle",
+  "version": "1.0.0",
+  "description": "Lunch shuffle Slack bot",
+  "author": "Roland Warmerdam (https://roland.codes)",
+  "keywords": [],
+  "repository": "Rowno/slack-lunch-shuffle",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "eslint lib test && ava"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "eslint": "^2.13.1",
+    "eslint-config-rowno": "^3.3.0"
+  },
+  "files": [
+    "lib"
+  ],
+  "private": true
+}
