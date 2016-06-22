@@ -1,11 +1,11 @@
 'use strict';
 const test = require('ava');
 
-const index = require('../lib/index');
+const app = require('../app');
 
 
 test('adds domain to url', (t) => {
     t.plan(1);
 
-    t.is(index.addDomain('http://127.0.0.1/test/'), 'http://localhost/test/');
+    t.is(app.addDomain('http://127.0.0.1/test/'), 'http://localhost/test/');
 });

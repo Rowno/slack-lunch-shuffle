@@ -6,12 +6,12 @@
   "keywords": [],
   "repository": "Rowno/slack-lunch-shuffle",
   "license": "ISC",
-  "main": "lib/index.js",
   "scripts": {
-    "test": "eslint lib test && ava"
+    "start": "node app/index.js",
+    "test": "eslint app test && ava"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.0.0"
   },
   "dependencies": {},
   "devDependencies": {
@@ -20,7 +20,7 @@
     "eslint-config-rowno": "^3.3.0"
   },
   "files": [
-    "lib"
+    "app"
   ],
   "private": true
 }
