@@ -9,6 +9,7 @@ const koaViews = require('koa-views');
 const mongoose = require('mongoose');
 const nunjucks = require('nunjucks');
 const util = require('./util');
+const Team = require('./schema').Team;
 
 const PORT = 8000;
 const DATABASE_HOST = 'localhost';
@@ -117,6 +118,17 @@ const routes = {
             console.log(response);
 
             if (response.ok) {
+                yield Team.findOneAndUpdate(
+                    {}, {
+                        id: response.team_id,
+                        name: response.team_name,
+                        accessToken: response.access_token,
+                        botUserId: response.bot.bot_user_id,
+                        botAccessToken: response.bot.bot_access_token,
+                    }, {
+                        upsert: true
+                    }
+                ).exec();
                 this.state.success = true;
             } else {
                 console.error(response.error);
