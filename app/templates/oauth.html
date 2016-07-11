@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% set title = "Lunch Shuffle" %}
+
+{% block body %}
+    {% if success %}
+        <p>Setup was successful! 😃</p>
+    {% else %}
+        <p>Setup failed 😞</p>
+        <p>
+            Please try again: {% include "partials/slack-button.html" %}
+        </p>
+    {% endif %}
+{% endblock %}

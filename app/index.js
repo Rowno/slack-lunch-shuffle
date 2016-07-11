@@ -1,4 +1,6 @@
 'use strict';
+const path = require('path');
+const got = require('got');
 const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
 const koaRoute = require('koa-route');
@@ -10,11 +12,15 @@ const util = require('./util');
 const app = koa();
 
 const PORT = 8000;
+const TEMPLATE_DIR = path.join(__dirname, 'templates');
 const PASSWORD = 'lunchshuffle';
+const CLIENT_ID = '11206583287.53960855157';
+const CLIENT_SECRET = '43d68bd92cb3b95f8f71db6a80445c0a';
+const VERIFICATION_TOKEN = 'jalEovUWU3MjUGdJcrDwIUul';
 app.keys = ['$Jqik9oP9ifvewR*evvH'];
 
-nunjucks.configure(__dirname);
-app.use(koaViews(__dirname, { map: { html: 'nunjucks' } }));
+nunjucks.configure(TEMPLATE_DIR);
+app.use(koaViews(TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
 app.use(koaBodyParser());
 app.use(koaSession(app));
 
@@ -41,22 +47,41 @@ const routes = {
     },
     *oauth() {
         yield login(this.state, this.session);
+        const code = this.request.query.code;
+        const oauthKey = this.request.query.state;
 
         if (!this.state.loggedIn ||
             !this.state.oauthKey ||
-            !this.request.query.state ||
-            !this.request.query.code) {
+            !oauthKey ||
+            !code) {
 
             return this.redirect('/');
         }
 
-        if (this.request.query.state === this.state.oauthKey) {
-            this.state.success = true;
-        } else {
-            this.state.success = false;
+        this.state.success = false;
+
+        // Check that the oauth request is legit using the oauthKey generated on login
+        if (oauthKey === this.state.oauthKey) {
+            const response = yield got('https://slack.com/api/oauth.access', {
+                query: {
+                    client_id: CLIENT_ID,
+                    client_secret: CLIENT_SECRET,
+                    code,
+                    timeout: 5000,
+                },
+                json: true,
+            }).then((res) => res.body).catch((error) => ({ ok: false, error }));
+
+            console.log(response);
+
+            if (response.ok) {
+                this.state.success = true;
+            } else {
+                console.error(response.error);
+            }
         }
 
-        yield this.render('oauth');
+        return yield this.render('oauth');
     },
     *buttons() {
         this.body = 'Buttons';

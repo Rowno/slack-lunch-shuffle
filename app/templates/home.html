@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set title = "Lunch Shuffle" %}
+
+{% block body %}
+    {% if loggedIn %}
+        {% include "partials/slack-button.html" %}
+    {% else %}
+        <form action="." method="post">
+            <label>
+                Password:
+                <input type="password" name="password">
+            </label>
+            <button type="submit">Login</button>
+        </form>
+    {% endif %}
+{% endblock %}

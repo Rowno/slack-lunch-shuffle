@@ -2,3 +2,7 @@ html {
     font-family: Arial;
     text-align: center;
 }
+
+img {
+    vertical-align: middle;
+}
