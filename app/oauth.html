@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% set title = "Lunch Shuffle" %}
+
+{% block body %}
+    {% if success %}
+        Setup was successful! 😃
+    {% else %}
+        Setup failed. 😞
+    {% endif %}
+{% endblock %}
