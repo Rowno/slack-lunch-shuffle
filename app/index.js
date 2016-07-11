@@ -1,9 +1,7 @@
 'use strict';
-const path = require('path');
 const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
 const koaRoute = require('koa-route');
-const koaStatic = require('koa-static');
 const koaSession = require('koa-session');
 const koaViews = require('koa-views');
 const nunjucks = require('nunjucks');
@@ -11,6 +9,7 @@ const util = require('./util');
 
 const app = koa();
 
+const PORT = 8000;
 const PASSWORD = 'lunchshuffle';
 app.keys = ['$Jqik9oP9ifvewR*evvH'];
 
@@ -18,7 +17,6 @@ nunjucks.configure(__dirname);
 app.use(koaViews(__dirname, { map: { html: 'nunjucks' } }));
 app.use(koaBodyParser());
 app.use(koaSession(app));
-app.use(koaStatic(path.join(__dirname, 'public')));
 
 
 function *login(state, session, password) {
@@ -71,4 +69,5 @@ app.use(koaRoute.get('/oauth', routes.oauth));
 app.use(koaRoute.post('/buttons', routes.buttons));
 
 
-app.listen(8000);
+app.listen(PORT);
+console.log(`Starting server at http://localhost:${PORT}`);
