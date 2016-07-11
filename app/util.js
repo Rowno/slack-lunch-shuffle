@@ -2,6 +2,11 @@
 const crypto = require('crypto');
 
 
+/**
+ * Generates a 20 cryptographically random characters
+ *
+ * @returns {string}
+ */
 exports.generateKey = function () {
     return new Promise((resolve, reject) => {
         crypto.randomBytes(20, (err, buffer) => {
