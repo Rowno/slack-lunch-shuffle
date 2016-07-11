@@ -1,10 +1,15 @@
 'use strict';
 const crypto = require('crypto');
-const thunkify = require('thunkify');
-
-const randomBytes = thunkify(crypto.randomBytes);
 
 
-exports.generateKey = function *() {
-    return (yield randomBytes(20)).toString('hex');
+exports.generateKey = function () {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(20, (err, buffer) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(buffer.toString('hex'));
+        });
+    });
 };

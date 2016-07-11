@@ -24,8 +24,7 @@
     "koa-session": "^3.3.1",
     "koa-views": "^4.1.0",
     "mongoose": "^4.5.3",
-    "nunjucks": "^2.4.2",
-    "thunkify": "^2.1.2"
+    "nunjucks": "^2.4.2"
   },
   "devDependencies": {
     "ava": "^0.15.2",
