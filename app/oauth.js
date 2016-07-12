@@ -37,11 +37,15 @@ function *route() {
         .then((res) => res.body)
         .catch((error) => ({ ok: false, error }));
 
+        if (response.warning) {
+            console.error(response.warning);
+        }
+
         if (response.ok) {
             // Save/update the team info and access tokens
             yield Team.findOneAndUpdate(
                 {}, {
-                    id: response.team_id,
+                    _id: response.team_id,
                     name: response.team_name,
                     accessToken: response.access_token,
                     botUserId: response.bot.bot_user_id,

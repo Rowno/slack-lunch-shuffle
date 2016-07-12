@@ -4,14 +4,29 @@ const Schema = mongoose.Schema;
 
 
 const TeamSchema = new Schema({
-    id: { type: String },
+    _id: { type: String, required: true },
     name: { type: String },
-    accessToken: { type: String },
-    botUserId: { type: String },
-    botAccessToken: { type: String },
+    accessToken: { type: String, required: true },
+    botUserId: { type: String, required: true },
+    botAccessToken: { type: String, required: true },
 }, {
+    _id: false,
     timestamps: true, // Automatically add/update createdAt and updatedAt fields
 });
 
 // Initialise the collection (table) from the schema
 exports.Team = mongoose.model('Team', TeamSchema);
+
+
+const ShuffleSchema = new Schema({
+    teamId: { type: String, required: true },
+    channelId: { type: String, required: true },
+    active: { type: Boolean, required: true, default: true },
+    messageTimestamp: { type: String, required: true },
+    people: [{ type: String }],
+}, {
+    timestamps: true, // Automatically add/update createdAt and updatedAt fields
+});
+
+// Initialise the collection (table) from the schema
+exports.Shuffle = mongoose.model('Shuffle', ShuffleSchema);

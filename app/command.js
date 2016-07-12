@@ -1,38 +1,49 @@
 'use strict';
 const got = require('got');
 const config = require('./config');
+const Team = require('./schema').Team;
+const Shuffle = require('./schema').Shuffle;
 
 
-function start(url) {
-    return got.post(url, {
+function startShuffle(team, channelId) {
+    got.post('https://slack.com/api/chat.postMessage', {
+        json: true,
         timeout: 5000,
-        body: JSON.stringify({
-            response_type: 'in_channel',
+        body: {
+            token: team.botAccessToken,
+            channel: channelId,
             text: "Would you like to join today's Lunch Shuffle?",
-            attachments: [{
+            attachments: JSON.stringify([{
                 fallback: "You're unable to join the lunch shuffle",
                 callback_id: 'join',
                 actions: [{
                     name: 'yes',
-                    text: 'Yes! 😎',
+                    text: 'Yes!',
                     type: 'button',
                     style: 'primary',
-                }, {
-                    name: 'no',
-                    text: 'No 😞',
-                    type: 'button',
-                    style: 'danger',
-                    confirm: {
-                        title: 'Are you sure?',
-                        text: 'Your awesome colleagues will be disappointed...',
-                        ok_text: 'Yes',
-                        dismiss_text: 'No',
-                    }
                 }]
-            }]
-        }),
-    }).then((response) => {
-        console.log(response.body);
+            }])
+        },
+    })
+    .then((res) => res.body)
+    .then((response) => {
+        console.log(response);
+        if (response.warning) {
+            console.error(response.warning);
+        }
+
+        if (!response.ok) {
+            console.error(response.error);
+            return;
+        }
+
+        const shuffle = new Shuffle({
+            teamId: team.id,
+            channelId,
+            messageTimestamp: response.ts,
+        });
+
+        shuffle.save();
     }, (error) => {
         console.error(error);
     });
@@ -44,18 +55,31 @@ function *route() {
         return;
     }
 
-    const subcommand = this.request.body.text;
+    const teamId = this.request.body.team_id;
+    const channelId = this.request.body.channel_id;
 
-    console.log(this.request.body);
+    yield Promise.all([
+        Team.findById(teamId).exec(),
+        Shuffle.findOne({ teamId, channelId, active: true }).exec(),
+    ]).then((values) => {
+        const team = values[0];
+        const shuffle = values[1];
 
-    if (subcommand === 'start') {
+        if (!team) {
+            this.body = "Sorry, it looks your team isn't setup on Lunch Shuffle.";
+            return;
+        }
+
+        if (shuffle) {
+            this.body = "There's already a shuffle active in this channel.";
+            return;
+        }
+
         this.body = '';
-        start(this.request.body.response_url);
-    } else if (subcommand === 'cancel') {
-        this.body = 'Cancelling the lunch shuffle...';
-    } else {
-        this.body = "Sorry, I didn't recognise that subcommand. Valid subcommands are `start` and `cancel`.";
-    }
+        startShuffle(team, channelId);
+    }, (error) => {
+        console.error(error);
+    });
 }
 
 module.exports = route;
