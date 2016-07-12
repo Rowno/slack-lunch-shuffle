@@ -9,7 +9,7 @@
   "main": "app/index.js",
   "scripts": {
     "start": "node .",
-    "test": "eslint app test && ava",
+    "test": "eslint app",
     "server": "nodemon -e js,html"
   },
   "engines": {
@@ -27,7 +27,6 @@
     "nunjucks": "^2.4.2"
   },
   "devDependencies": {
-    "ava": "^0.15.2",
     "eslint": "^2.13.1",
     "eslint-config-rowno": "^3.3.0",
     "nodemon": "^1.9.2"
