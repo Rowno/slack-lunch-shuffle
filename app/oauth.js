@@ -25,13 +25,13 @@ function *route() {
     if (oauthKey === this.state.oauthKey) {
         // Get the access token
         const response = yield got('https://slack.com/api/oauth.access', {
+            json: true,
+            timeout: 5000,
             query: {
                 client_id: config.SLACK_CLIENT_ID,
                 client_secret: config.SLACK_CLIENT_SECRET,
                 code,
-                timeout: 5000,
             },
-            json: true,
         })
         // Normalise the response object
         .then((res) => res.body)
