@@ -33,7 +33,7 @@ function start(url) {
         }),
     }).then((response) => {
         console.log(response.body);
-    }).catch((error) => {
+    }, (error) => {
         console.error(error);
     });
 }
