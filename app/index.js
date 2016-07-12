@@ -1,6 +1,4 @@
 'use strict';
-const path = require('path');
-const got = require('got');
 const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
 const koaRoute = require('koa-route');
@@ -8,17 +6,11 @@ const koaSession = require('koa-session');
 const koaViews = require('koa-views');
 const mongoose = require('mongoose');
 const nunjucks = require('nunjucks');
+const config = require('./config');
 const util = require('./util');
-const Team = require('./schema').Team;
-
-const PORT = 8000;
-const DATABASE_HOST = 'localhost';
-const DATABASE_NAME = 'lunch-shuffle';
-const TEMPLATE_DIR = path.join(__dirname, 'templates');
-const PASSWORD = 'lunchshuffle'; // Lunch shuffle login password
-const SLACK_CLIENT_ID = '11206583287.53960855157';
-const SLACK_CLIENT_SECRET = '43d68bd92cb3b95f8f71db6a80445c0a';
-const SLACK_VERIFICATION_TOKEN = 'jalEovUWU3MjUGdJcrDwIUul';
+const oauthRoute = require('./oauth');
+const commandRoute = require('./command');
+const buttonsRoute = require('./buttons');
 
 
 // Configure mongoose to return native Promises
@@ -66,110 +58,29 @@ process.on('unhandledRejection', (err) => {
 
 const app = koa();
 app.keys = ['$Jqik9oP9ifvewR*evvH']; // Signed cookie keys
-nunjucks.configure(TEMPLATE_DIR);
-app.use(koaViews(TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
+nunjucks.configure(config.TEMPLATE_DIR);
+app.use(koaViews(config.TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
 app.use(koaBodyParser());
 app.use(koaSession(app));
 
 
-/**
- * Tries to log in the user to lunch shuffle
- *
- * @param {object} state Koa this.state
- * @param {object} session Koa this.session
- * @param {string} password Password the user entered
- */
-function *login(state, session, password) {
-    // Check against hard coded password 😆
-    if (password === PASSWORD) {
-        session.loggedIn = true;
-    }
-
-    // Generate a key for validating the Slack oauth response
-    if (session.loggedIn && !session.oauthKey) {
-        session.oauthKey = yield util.generateKey();
-    }
-
-    state.loggedIn = session.loggedIn;
-    state.oauthKey = session.oauthKey;
-}
-
-
 function *home() {
-    yield login(this.state, this.session, this.request.body.password);
+    yield util.login(this.state, this.session, this.request.body.password);
 
     yield this.render('home');
 }
 
-function *oauth() {
-    yield login(this.state, this.session);
-    const code = this.request.query.code;
-    const oauthKey = this.request.query.state;
-
-    // If you don't have all these things you probably shouldn't be here
-    if (!this.state.loggedIn ||
-        !this.state.oauthKey ||
-        !oauthKey ||
-        !code) {
-
-        return this.redirect('/');
-    }
-
-    this.state.success = false;
-
-    // Check that the oauth request is legit using the oauthKey generated on login
-    if (oauthKey === this.state.oauthKey) {
-        // Get the access token
-        const response = yield got('https://slack.com/api/oauth.access', {
-            query: {
-                client_id: SLACK_CLIENT_ID,
-                client_secret: SLACK_CLIENT_SECRET,
-                code,
-                timeout: 5000,
-            },
-            json: true,
-        })
-        // Normalise the response object
-        .then((res) => res.body)
-        .catch((error) => ({ ok: false, error }));
-
-        if (response.ok) {
-            // Save/update the team info and access tokens
-            yield Team.findOneAndUpdate(
-                {}, {
-                    id: response.team_id,
-                    name: response.team_name,
-                    accessToken: response.access_token,
-                    botUserId: response.bot.bot_user_id,
-                    botAccessToken: response.bot.bot_access_token,
-                }, {
-                    upsert: true
-                }
-            ).exec();
-
-            this.state.success = true;
-        } else {
-            console.error(response.error);
-        }
-    }
-
-    return yield this.render('oauth');
-}
-
-function *buttons() {
-    this.body = 'Buttons';
-}
-
 app.use(koaRoute.get('/', home));
 app.use(koaRoute.post('/', home));
-app.use(koaRoute.get('/oauth', oauth));
-app.use(koaRoute.post('/buttons', buttons));
+app.use(koaRoute.get('/oauth', oauthRoute));
+app.use(koaRoute.post('/buttons', buttonsRoute));
+app.use(koaRoute.post('/command', commandRoute));
 
 
 console.log('Server starting...');
-mongoose.connect(`mongodb://${DATABASE_HOST}/${DATABASE_NAME}`)
+mongoose.connect(`mongodb://${config.DATABASE_HOST}/${config.DATABASE_NAME}`)
     .then(() => {
-        server = app.listen(PORT, () => {
-            console.log(`Server started at http://localhost:${PORT}`);
+        server = app.listen(config.PORT, () => {
+            console.log(`Server started at http://localhost:${config.PORT}`);
         });
     });
