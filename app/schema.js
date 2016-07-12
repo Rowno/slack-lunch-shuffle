@@ -11,19 +11,27 @@ const TeamSchema = new Schema({
     botAccessToken: { type: String, required: true },
 }, {
     _id: false,
-    timestamps: true, // Automatically add/update createdAt and updatedAt fields
+    timestamps: true,
 });
 
 // Initialise the collection (table) from the schema
 exports.Team = mongoose.model('Team', TeamSchema);
 
 
+const PersonSchema = new Schema({
+    _id: { type: String, required: true },
+    name: { type: String, required: true },
+}, {
+    _id: false,
+    timestamps: true,
+});
+
 const ShuffleSchema = new Schema({
     teamId: { type: String, required: true },
     channelId: { type: String, required: true },
     active: { type: Boolean, required: true, default: true },
     messageTimestamp: { type: String, required: true },
-    people: [{ type: String }],
+    people: [PersonSchema],
 }, {
     timestamps: true, // Automatically add/update createdAt and updatedAt fields
 });

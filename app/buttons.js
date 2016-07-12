@@ -1,5 +1,24 @@
 'use strict';
 const config = require('./config');
+const Shuffle = require('./schema').Shuffle;
+
+
+function addToShuffle(teamId, channelId, user) {
+    return Shuffle.findOne({ teamId, channelId, active: true }).exec()
+    .then((shuffle) => {
+        if (!shuffle) {
+            return "There doesn't seem to be lunch shuffle running in this channel. 😕";
+        }
+
+        const person = shuffle.people.find((p) => p.id === user.id);
+        if (person) {
+            return "You're already in the lunch shuffle!";
+        }
+
+        shuffle.people.push({ _id: user.id, name: user.name });
+        return shuffle.save().then(() => "Sweet, you've been added to the lunch shuffle! 😎");
+    });
+}
 
 
 function *route() {
@@ -19,15 +38,18 @@ function *route() {
 
     console.log(body);
 
+    const teamId = body.team.id;
+    const channelId = body.channel.id;
+    const user = body.user;
     const callback = body.callback_id;
     const action = body.actions[0].name;
 
     if (callback === 'join' && action === 'yes') {
         this.body = {
             replace_original: false,
-            text: "Sweet, you've been added! 😃",
+            text: yield addToShuffle(teamId, channelId, user),
         };
-    } else if (callback === 'join' && action === 'no') {
+    } else if (callback === 'leave' && action === 'yes') {
         this.body = {
             replace_original: false,
             text: "We're missing you already... 😞",
@@ -35,7 +57,7 @@ function *route() {
     } else {
         this.body = {
             replace_original: false,
-            text: 'Something strange just happened...',
+            text: 'Oops, it looks like this button does nothing! 😅',
         };
     }
 }

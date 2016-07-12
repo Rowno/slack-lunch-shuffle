@@ -27,7 +27,6 @@ function startShuffle(team, channelId) {
     })
     .then((res) => res.body)
     .then((response) => {
-        console.log(response);
         if (response.warning) {
             console.error(response.warning);
         }
@@ -44,10 +43,10 @@ function startShuffle(team, channelId) {
         });
 
         shuffle.save();
-    }, (error) => {
-        console.error(error);
-    });
+    })
+    .catch((error) => console.error(error));
 }
+
 
 function *route() {
     if (this.request.body.token !== config.SLACK_VERIFICATION_TOKEN) {
@@ -71,14 +70,12 @@ function *route() {
         }
 
         if (shuffle) {
-            this.body = "There's already a shuffle active in this channel.";
+            this.body = "There's already a lunch shuffle running in this channel.";
             return;
         }
 
         this.body = '';
         startShuffle(team, channelId);
-    }, (error) => {
-        console.error(error);
     });
 }
 
