@@ -18,7 +18,26 @@ function *route() {
     }
 
     console.log(body);
-    this.body = '';
+
+    const callback = body.callback_id;
+    const action = body.actions[0].name;
+
+    if (callback === 'join' && action === 'yes') {
+        this.body = {
+            replace_original: false,
+            text: "Sweet, you've been added! 😃",
+        };
+    } else if (callback === 'join' && action === 'no') {
+        this.body = {
+            replace_original: false,
+            text: "We're missing you already... 😞",
+        };
+    } else {
+        this.body = {
+            replace_original: false,
+            text: 'Something strange just happened...',
+        };
+    }
 }
 
 module.exports = route;
