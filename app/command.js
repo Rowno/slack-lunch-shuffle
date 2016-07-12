@@ -1,6 +1,7 @@
 'use strict';
 const got = require('got');
 const config = require('./config');
+const copy = require('./copy');
 const Team = require('./schema').Team;
 const Shuffle = require('./schema').Shuffle;
 
@@ -12,17 +13,8 @@ function startShuffle(team, channelId) {
         body: {
             token: team.botAccessToken,
             channel: channelId,
-            text: "Would you like to join today's Lunch Shuffle?",
-            attachments: JSON.stringify([{
-                fallback: "You're unable to join the lunch shuffle",
-                callback_id: 'join',
-                actions: [{
-                    name: 'yes',
-                    text: 'Yes!',
-                    type: 'button',
-                    style: 'primary',
-                }]
-            }])
+            text: copy.joinMessageText,
+            attachments: JSON.stringify(copy.joinMessageButtons)
         },
     })
     .then((res) => res.body)
@@ -65,12 +57,12 @@ function *route() {
         const shuffle = values[1];
 
         if (!team) {
-            this.body = "Sorry, it looks your team isn't setup on Lunch Shuffle.";
+            this.body = copy.notSetup;
             return;
         }
 
         if (shuffle) {
-            this.body = "There's already a lunch shuffle running in this channel.";
+            this.body = copy.alreadyActiveInChannel;
             return;
         }
 

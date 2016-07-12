@@ -1,5 +1,6 @@
 'use strict';
 const config = require('./config');
+const copy = require('./copy');
 const Shuffle = require('./schema').Shuffle;
 
 
@@ -7,16 +8,16 @@ function addToShuffle(teamId, channelId, user) {
     return Shuffle.findOne({ teamId, channelId, active: true }).exec()
     .then((shuffle) => {
         if (!shuffle) {
-            return "There doesn't seem to be lunch shuffle running in this channel. 😕";
+            return copy.noShuffleActive;
         }
 
         const person = shuffle.people.find((p) => p.id === user.id);
         if (person) {
-            return "You're already in the lunch shuffle!";
+            return copy.alreadyInShuffle;
         }
 
         shuffle.people.push({ _id: user.id, name: user.name });
-        return shuffle.save().then(() => "Sweet, you've been added to the lunch shuffle! 😎");
+        return shuffle.save().then(() => copy.addedToShuffle);
     });
 }
 
@@ -50,14 +51,11 @@ function *route() {
             text: yield addToShuffle(teamId, channelId, user),
         };
     } else if (callback === 'leave' && action === 'yes') {
-        this.body = {
-            replace_original: false,
-            text: "We're missing you already... 😞",
-        };
+        this.body = '';
     } else {
         this.body = {
             replace_original: false,
-            text: 'Oops, it looks like this button does nothing! 😅',
+            text: copy.noopButton,
         };
     }
 }
