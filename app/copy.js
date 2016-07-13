@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-    startMessageText: "Would you like to join today's Lunch Shuffle?",
+    startMessageText: 'Would you like to join today‘s Lunch Shuffle?',
     startMessageAttachments: [{
-        fallback: "Your current Slack client doesn't support Lunch Shuffle.",
+        fallback: 'Your current Slack client doesn‘t support Lunch Shuffle. 😞',
         callback_id: 'start',
         actions: [{
             name: 'join',
@@ -17,8 +17,8 @@ module.exports = {
             style: 'danger',
         }]
     }],
-    notSetup: "Sorry, it looks your team isn't setup on Lunch Shuffle.",
-    alreadyActiveInChannel: "There's already a lunch shuffle running in this channel.",
+    notSetup: 'Sorry, it looks your team isn‘t setup on Lunch Shuffle.',
+    alreadyActiveInChannel: 'There‘s already a lunch shuffle running in this channel.',
     noopButton: 'Oops, it looks like this button does nothing! 😅',
-    leaveSuccessMessage: "You've been removed from the lunch shuffle, your colleagues miss you already. 😞",
+    leaveSuccessMessage: 'You‘ve been removed from the lunch shuffle, your colleagues miss you already. 😞',
 };
