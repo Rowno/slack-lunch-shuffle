@@ -18,6 +18,7 @@ function startShuffle(team, channelId) {
         },
     })
     .then((res) => res.body)
+    .catch((error) => console.error(error))
     .then((response) => {
         if (response.warning) {
             console.error(response.warning);
@@ -35,8 +36,7 @@ function startShuffle(team, channelId) {
         });
 
         shuffle.save();
-    })
-    .catch((error) => console.error(error));
+    });
 }
 
 
