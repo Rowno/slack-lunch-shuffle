@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-    joinMessageText: "Would you like to join today's Lunch Shuffle?",
-    joinMessageButtons: [{
+    startMessageText: "Would you like to join today's Lunch Shuffle?",
+    startMessageAttachments: [{
         fallback: "Your current Slack client doesn't support Lunch Shuffle.",
         callback_id: 'start',
         actions: [{

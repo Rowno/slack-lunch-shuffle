@@ -13,8 +13,8 @@ function startShuffle(team, channelId) {
         body: {
             token: team.botAccessToken,
             channel: channelId,
-            text: copy.joinMessageText,
-            attachments: JSON.stringify(copy.joinMessageButtons)
+            text: copy.startMessageText,
+            attachments: JSON.stringify(copy.startMessageAttachments)
         },
     })
     .then((res) => res.body)

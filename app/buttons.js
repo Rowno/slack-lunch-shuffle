@@ -8,7 +8,7 @@ const Team = require('./schema').Team;
 
 
 function updateShuffleMessage(team, shuffle) {
-    let text = copy.joinMessageText;
+    let text = copy.startMessageText;
 
     if (shuffle.people.length > 0) {
         let names = shuffle.people.map((person) => `@${person.name}`);
@@ -23,7 +23,7 @@ function updateShuffleMessage(team, shuffle) {
 
         names = names.join(', ');
 
-        text = `${copy.joinMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`;
+        text = `${copy.startMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`;
     }
 
     got.post('https://slack.com/api/chat.update', {
