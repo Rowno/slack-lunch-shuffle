@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 
+exports.BASE_URL = 'https://lunch-shuffle.rolandwarmerdam.co.nz';
 exports.PORT = 8000;
 exports.DATABASE_HOST = 'localhost';
 exports.DATABASE_NAME = 'lunch-shuffle';
