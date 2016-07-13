@@ -60,7 +60,7 @@ function joinShuffle(teamId, channelId, user) {
         const team = values[0];
         const shuffle = values[1];
 
-        if (!shuffle) {
+        if (!team || !shuffle) {
             return;
         }
 
@@ -85,7 +85,7 @@ function leaveShuffle(teamId, channelId, user) {
         const team = values[0];
         const shuffle = values[1];
 
-        if (!shuffle) {
+        if (!team || !shuffle) {
             return;
         }
 
