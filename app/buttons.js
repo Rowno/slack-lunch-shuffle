@@ -7,7 +7,71 @@ const Shuffle = require('./schema').Shuffle;
 const Team = require('./schema').Team;
 
 
-function addToShuffle(teamId, channelId, user) {
+function updateShuffleMessage(team, shuffle) {
+    let names = shuffle.people.map((person) => `@${person.name}`);
+
+    // Add 'and' between the last two names
+    if (names.length > 1) {
+        const last = names.pop();
+        const secondToLast = names.pop();
+        const lastTwo = `${secondToLast} and ${last}`;
+        names.push(lastTwo);
+    }
+
+    names = names.join(', ');
+
+    got.post('https://slack.com/api/chat.update', {
+        json: true,
+        timeout: 5000,
+        body: {
+            token: team.botAccessToken,
+            ts: shuffle.messageTimestamp,
+            channel: shuffle.channelId,
+            parse: 'full',
+            link_names: 1,
+            text: `${copy.joinMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`,
+        },
+    })
+    .then((res) => res.body)
+    .then((response) => {
+        if (response.warning) {
+            console.error(response.warning);
+        }
+
+        if (!response.ok) {
+            console.error(response.error);
+            return;
+        }
+    }, (error) => console.error(error));
+}
+
+
+function postLeaveMessage(team, shuffle, responseUrl) {
+    got.post(responseUrl, {
+        json: true,
+        timeout: 5000,
+        body: JSON.stringify({ // For some reason sending a `application/x-www-form-urlencoded` body to a response_url casues a 500 error in Slack
+            response_type: 'ephemeral',
+            replace_original: false,
+            text: copy.leaveMessageText,
+            attachments: copy.leaveMessageButtons
+        }),
+    })
+    .then((res) => res.body)
+    .then((response) => {
+        if (response.warning) {
+            console.error(response.warning);
+        }
+
+        if (!response.ok) {
+            console.error(response.error);
+            return;
+        }
+    }, (error) => console.error(error));
+}
+
+
+function joinShuffle(teamId, channelId, user, responseUrl) {
     Promise.all([
         Team.findById(teamId).exec(),
         Shuffle.findOne({ teamId, channelId, active: true }).exec(),
@@ -27,41 +91,8 @@ function addToShuffle(teamId, channelId, user) {
         shuffle.people.push({ _id: user.id, name: user.name });
         shuffle.save();
 
-        let names = shuffle.people.map((person) => `@${person.name}`);
-
-        // Add 'and' between the last two names
-        if (names.length > 1) {
-            const last = names.pop();
-            const secondToLast = names.pop();
-            const lastTwo = `${secondToLast} and ${last}`;
-            names.push(lastTwo);
-        }
-
-        names = names.join(', ');
-
-        got.post('https://slack.com/api/chat.update', {
-            json: true,
-            timeout: 5000,
-            body: {
-                token: team.botAccessToken,
-                ts: shuffle.messageTimestamp,
-                channel: channelId,
-                parse: 'full',
-                link_names: 1,
-                text: `${copy.joinMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`,
-            },
-        })
-        .then((res) => res.body)
-        .then((response) => {
-            if (response.warning) {
-                console.error(response.warning);
-            }
-
-            if (!response.ok) {
-                console.error(response.error);
-                return;
-            }
-        }, (error) => console.error(error));
+        updateShuffleMessage(team, shuffle);
+        postLeaveMessage(team, shuffle, responseUrl);
     });
 }
 
@@ -83,17 +114,18 @@ function *route() {
 
     console.log(body);
 
+    const callback = body.callback_id;
+    const action = body.actions[0].name;
     const teamId = body.team.id;
     const channelId = body.channel.id;
     const user = body.user;
-    const callback = body.callback_id;
-    const action = body.actions[0].name;
+    const responseUrl = body.response_url;
 
     if (callback === 'join' && action === 'yes') {
         this.body = '';
-        addToShuffle(teamId, channelId, user);
+        joinShuffle(teamId, channelId, user, responseUrl);
     } else if (callback === 'leave' && action === 'yes') {
-        this.body = '';
+        this.body = 'Leave';
     } else {
         this.body = {
             replace_original: false,
