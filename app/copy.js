@@ -4,21 +4,15 @@ module.exports = {
     joinMessageText: "Would you like to join today's Lunch Shuffle?",
     joinMessageButtons: [{
         fallback: "Your current Slack client doesn't support Lunch Shuffle.",
-        callback_id: 'join',
+        callback_id: 'start',
         actions: [{
-            name: 'yes',
-            text: 'Yes!',
+            name: 'join',
+            text: 'Join',
             type: 'button',
             style: 'primary',
-        }]
-    }],
-    leaveMessageText: 'Let me know if you change your mind so I can keep the groups even.',
-    leaveMessageButtons: [{
-        fallback: "Your current Slack client doesn't support Lunch Shuffle.",
-        callback_id: 'leave',
-        actions: [{
-            name: 'yes',
-            text: "I can't make it",
+        }, {
+            name: 'leave',
+            text: 'Leave',
             type: 'button',
             style: 'danger',
         }]

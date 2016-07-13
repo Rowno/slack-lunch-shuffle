@@ -52,32 +52,7 @@ function updateShuffleMessage(team, shuffle) {
 }
 
 
-function postLeaveMessage(team, shuffle, responseUrl) {
-    got.post(responseUrl, {
-        json: true,
-        timeout: 5000,
-        body: JSON.stringify({ // For some reason sending a `application/x-www-form-urlencoded` body to a response_url casues a 500 error in Slack
-            response_type: 'ephemeral',
-            replace_original: false,
-            text: copy.leaveMessageText,
-            attachments: copy.leaveMessageButtons
-        }),
-    })
-    .then((res) => res.body)
-    .then((response) => {
-        if (response.warning) {
-            console.error(response.warning);
-        }
-
-        if (!response.ok) {
-            console.error(response.error);
-            return;
-        }
-    }, (error) => console.error(error));
-}
-
-
-function joinShuffle(teamId, channelId, user, responseUrl) {
+function joinShuffle(teamId, channelId, user) {
     Promise.all([
         Team.findById(teamId).exec(),
         Shuffle.findOne({ teamId, channelId, active: true }).exec(),
@@ -98,7 +73,6 @@ function joinShuffle(teamId, channelId, user, responseUrl) {
         shuffle.save();
 
         updateShuffleMessage(team, shuffle);
-        postLeaveMessage(team, shuffle, responseUrl);
     });
 }
 
@@ -143,13 +117,12 @@ function *route() {
     const teamId = body.team.id;
     const channelId = body.channel.id;
     const user = body.user;
-    const responseUrl = body.response_url;
 
-    if (callback === 'join' && action === 'yes') {
+    if (callback === 'start' && action === 'join') {
         this.body = '';
-        joinShuffle(teamId, channelId, user, responseUrl);
-    } else if (callback === 'leave' && action === 'yes') {
-        this.body = copy.leaveSuccessMessage;
+        joinShuffle(teamId, channelId, user);
+    } else if (callback === 'start' && action === 'leave') {
+        this.body = '';
         leaveShuffle(teamId, channelId, user);
     } else {
         this.body = {
