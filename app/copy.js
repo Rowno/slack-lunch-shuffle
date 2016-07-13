@@ -26,4 +26,5 @@ module.exports = {
     notSetup: "Sorry, it looks your team isn't setup on Lunch Shuffle.",
     alreadyActiveInChannel: "There's already a lunch shuffle running in this channel.",
     noopButton: 'Oops, it looks like this button does nothing! 😅',
+    leaveSuccessMessage: "You've been removed from the lunch shuffle, your colleagues miss you already. 😞",
 };

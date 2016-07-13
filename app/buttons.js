@@ -8,17 +8,23 @@ const Team = require('./schema').Team;
 
 
 function updateShuffleMessage(team, shuffle) {
-    let names = shuffle.people.map((person) => `@${person.name}`);
+    let text = copy.joinMessageText;
 
-    // Add 'and' between the last two names
-    if (names.length > 1) {
-        const last = names.pop();
-        const secondToLast = names.pop();
-        const lastTwo = `${secondToLast} and ${last}`;
-        names.push(lastTwo);
+    if (shuffle.people.length > 0) {
+        let names = shuffle.people.map((person) => `@${person.name}`);
+
+        // Add 'and' between the last two names
+        if (names.length > 1) {
+            const last = names.pop();
+            const secondToLast = names.pop();
+            const lastTwo = `${secondToLast} and ${last}`;
+            names.push(lastTwo);
+        }
+
+        names = names.join(', ');
+
+        text = `${copy.joinMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`;
     }
-
-    names = names.join(', ');
 
     got.post('https://slack.com/api/chat.update', {
         json: true,
@@ -29,7 +35,7 @@ function updateShuffleMessage(team, shuffle) {
             channel: shuffle.channelId,
             parse: 'full',
             link_names: 1,
-            text: `${copy.joinMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`,
+            text,
         },
     })
     .then((res) => res.body)
@@ -97,6 +103,26 @@ function joinShuffle(teamId, channelId, user, responseUrl) {
 }
 
 
+function leaveShuffle(teamId, channelId, user) {
+    Promise.all([
+        Team.findById(teamId).exec(),
+        Shuffle.findOne({ teamId, channelId, active: true }).exec(),
+    ]).then((values) => {
+        const team = values[0];
+        const shuffle = values[1];
+
+        if (!shuffle) {
+            return;
+        }
+
+        shuffle.people.id(user.id).remove();
+        shuffle.save();
+
+        updateShuffleMessage(team, shuffle);
+    });
+}
+
+
 function *route() {
     let body = this.request.body.payload;
 
@@ -112,8 +138,6 @@ function *route() {
         return;
     }
 
-    console.log(body);
-
     const callback = body.callback_id;
     const action = body.actions[0].name;
     const teamId = body.team.id;
@@ -125,7 +149,8 @@ function *route() {
         this.body = '';
         joinShuffle(teamId, channelId, user, responseUrl);
     } else if (callback === 'leave' && action === 'yes') {
-        this.body = 'Leave';
+        this.body = copy.leaveSuccessMessage;
+        leaveShuffle(teamId, channelId, user);
     } else {
         this.body = {
             replace_original: false,
