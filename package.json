@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "got": "^6.3.0",
+    "js-yaml": "^3.6.1",
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.2.0",
     "koa-route": "^2.4.2",
@@ -24,6 +25,7 @@
     "lodash.chunk": "^4.0.6",
     "lodash.shuffle": "^4.0.0",
     "mongoose": "^4.5.3",
+    "nconf": "^0.8.4",
     "nunjucks": "^2.4.2",
     "pluralize": "^3.0.0"
   },

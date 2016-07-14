@@ -1,12 +1,30 @@
 'use strict';
-const path = require('path');
+const nconf = require('nconf');
+const yaml = require('js-yaml');
 
-exports.BASE_URL = 'https://lunch-shuffle.rolandwarmerdam.co.nz';
-exports.PORT = 8000;
-exports.DATABASE_HOST = 'localhost';
-exports.DATABASE_NAME = 'lunch-shuffle';
-exports.TEMPLATE_DIR = path.join(__dirname, 'templates');
-exports.PASSWORD = 'lunchshuffle'; // Lunch shuffle login password
-exports.SLACK_CLIENT_ID = '11206583287.53960855157';
-exports.SLACK_CLIENT_SECRET = '43d68bd92cb3b95f8f71db6a80445c0a';
-exports.SLACK_VERIFICATION_TOKEN = 'jalEovUWU3MjUGdJcrDwIUul';
+
+nconf.env();
+
+nconf.use('yaml', {
+    type: 'file',
+    file: 'config.yaml',
+    format: {
+        parse: yaml.safeLoad,
+        stringify: yaml.safeDump,
+    }
+});
+
+nconf.file('json', 'config.json');
+
+nconf.required([
+    'baseurl',
+    'port',
+    'mongouri',
+    'password',
+    'slack:id',
+    'slack:secret',
+    'slack:verification'
+]);
+
+
+module.exports = nconf;

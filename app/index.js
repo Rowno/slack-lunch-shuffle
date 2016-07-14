@@ -1,4 +1,5 @@
 'use strict';
+const path = require('path');
 const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
 const koaRoute = require('koa-route');
@@ -16,6 +17,7 @@ const buttonsRoute = require('./buttons');
 // Configure mongoose to return native Promises
 mongoose.Promise = global.Promise;
 let server;
+const TEMPLATE_DIR = path.join(__dirname, 'templates');
 
 
 /**
@@ -58,8 +60,8 @@ process.on('unhandledRejection', (err) => {
 
 const app = koa();
 app.keys = ['$Jqik9oP9ifvewR*evvH']; // Signed cookie keys
-nunjucks.configure(config.TEMPLATE_DIR);
-app.use(koaViews(config.TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
+nunjucks.configure(TEMPLATE_DIR);
+app.use(koaViews(TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
 app.use(koaBodyParser());
 app.use(koaSession(app));
 
@@ -78,9 +80,9 @@ app.use(koaRoute.post('/command', commandRoute));
 
 
 console.log('Server starting...');
-mongoose.connect(`mongodb://${config.DATABASE_HOST}/${config.DATABASE_NAME}`)
+mongoose.connect(config.get('mongouri'))
     .then(() => {
-        server = app.listen(config.PORT, () => {
-            console.log(`Server started at http://localhost:${config.PORT}`);
+        server = app.listen(config.get('port'), () => {
+            console.log(`Server started at http://localhost:${config.get('port')}`);
         });
     });

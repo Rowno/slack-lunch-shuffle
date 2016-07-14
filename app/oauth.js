@@ -28,8 +28,8 @@ function *route() {
             json: true,
             timeout: 5000,
             query: {
-                client_id: config.SLACK_CLIENT_ID,
-                client_secret: config.SLACK_CLIENT_SECRET,
+                client_id: config.get('slack:id'),
+                client_secret: config.get('slack:secret'),
                 code,
             },
         })

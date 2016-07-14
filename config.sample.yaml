@@ -1,0 +1,9 @@
+---
+baseurl: https://example.com
+port: 8000
+mongouri: mongodb://localhost/lunchshuffle
+password: everybodyshuffling
+slack:
+    id: 23498654023.96478234093
+    secret: dfks8kj405kjgj45lljbadw5m6jkf3o9
+    verification: saWgjAmksHasdQIdjsHDjsEQ

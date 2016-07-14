@@ -34,7 +34,7 @@ exports.generateKey = generateKey;
  */
 function *login(state, session, password) {
     // Check against hard coded password 😆
-    if (password === config.PASSWORD) {
+    if (password === config.get('password')) {
         session.loggedIn = true;
     }
 

@@ -173,7 +173,7 @@ function finishShuffle(teamId, channelId, responseUrl) {
 
 
 function *route() {
-    if (this.request.body.token !== config.SLACK_VERIFICATION_TOKEN) {
+    if (this.request.body.token !== config.get('slack:verification')) {
         this.response.status = 401;
         return;
     }

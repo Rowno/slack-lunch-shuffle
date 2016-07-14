@@ -61,7 +61,7 @@ function *route() {
 
     body = JSON.parse(body);
 
-    if (body.token !== config.SLACK_VERIFICATION_TOKEN) {
+    if (body.token !== config.get('slack:verification')) {
         this.response.status = 401;
         return;
     }

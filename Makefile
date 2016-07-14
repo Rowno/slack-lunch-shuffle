@@ -13,6 +13,6 @@ test: node_modules
 .PHONY: test
 
 deploy:
-	rsync -avzh --delete --no-owner --no-group --exclude='/.git' --exclude='.DS_Store' --filter="dir-merge,- .gitignore" . lunch-shuffle@162.243.133.80:/home/lunch-shuffle/files/
+	rsync -avzh --delete --no-owner --no-group --include="/config.yaml" --exclude='/.git' --exclude='.DS_Store' --filter="dir-merge,- .gitignore" . lunch-shuffle@162.243.133.80:/home/lunch-shuffle/files/
 	ssh lunch-shuffle@162.243.133.80 'cd files; make node_modules NODE_ENV=production; kill $$(systemctl -p MainPID show lunch-shuffle | sed -e "s/MainPID=//")'
 .PHONY: deploy

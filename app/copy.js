@@ -40,7 +40,7 @@ Try it!
         `,
     }, {
         fallback: 'Everybody shuffling!',
-        image_url: `${config.BASE_URL}/images/shuffle.gif`,
+        image_url: `${config.get('baseurl')}/images/shuffle.gif`,
     }],
     notSetup: 'Sorry, it looks your team isn‘t setup on Lunch Shuffle.',
     alreadyActiveInChannel: 'There‘s already a lunch shuffle running in this channel.',
