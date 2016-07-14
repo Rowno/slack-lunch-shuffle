@@ -4,6 +4,7 @@ const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
 const koaRoute = require('koa-route');
 const koaSession = require('koa-session');
+const koaStatic = require('koa-static');
 const koaViews = require('koa-views');
 const mongoose = require('mongoose');
 const nunjucks = require('nunjucks');
@@ -14,10 +15,12 @@ const commandRoute = require('./command');
 const buttonsRoute = require('./buttons');
 
 
+const PUBLIC_DIR = path.join(__dirname, 'public');
+const TEMPLATE_DIR = path.join(__dirname, 'templates');
+let server;
+
 // Configure mongoose to return native Promises
 mongoose.Promise = global.Promise;
-let server;
-const TEMPLATE_DIR = path.join(__dirname, 'templates');
 
 
 /**
@@ -61,6 +64,7 @@ process.on('unhandledRejection', (err) => {
 const app = koa();
 app.keys = config.get('cookiekeys'); // Signed cookie keys
 nunjucks.configure(TEMPLATE_DIR);
+app.use(koaStatic(PUBLIC_DIR));
 app.use(koaViews(TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
 app.use(koaBodyParser());
 app.use(koaSession(app));
