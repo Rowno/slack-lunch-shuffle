@@ -42,9 +42,9 @@ function *route() {
         }
 
         if (response.ok) {
-            // Save/update the team info and access tokens
-            yield Team.findOneAndUpdate(
-                {}, {
+            // Add or update the team
+            yield Team.findByIdAndUpdate(
+                response.team_id, {
                     _id: response.team_id,
                     name: response.team_name,
                     accessToken: response.access_token,
