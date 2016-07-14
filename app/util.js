@@ -1,5 +1,6 @@
 'use strict';
 const crypto = require('crypto');
+const got = require('got');
 const config = require('./config');
 
 
@@ -44,3 +45,19 @@ function *login(state, session, password) {
     state.oauthKey = session.oauthKey;
 }
 exports.login = login;
+
+
+function respond(responseUrl, message) {
+    return got.post(responseUrl, {
+        timeout: 5000,
+        // For some reason sending a `application/x-www-form-urlencoded` body to a response_url casues a 500 error in Slack
+        body: JSON.stringify(message),
+    })
+    .then((res) => res.body)
+    .then((response) => {
+        if (response !== 'ok') {
+            console.error(response);
+        }
+    }, (error) => console.error(error));
+}
+exports.respond = respond;

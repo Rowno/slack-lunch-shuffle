@@ -22,8 +22,7 @@ const PersonSchema = new Schema({
     _id: { type: String, required: true },
     name: { type: String, required: true },
 }, {
-    _id: false,
-    timestamps: true,
+    _id: false
 });
 
 const ShuffleSchema = new Schema({
@@ -32,6 +31,7 @@ const ShuffleSchema = new Schema({
     active: { type: Boolean, required: true, default: true },
     messageTimestamp: { type: String, required: true },
     people: [PersonSchema],
+    groups: [{ type: String }],
 }, {
     timestamps: true, // Automatically add/update createdAt and updatedAt fields
 });
