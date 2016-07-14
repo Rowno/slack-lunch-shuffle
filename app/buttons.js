@@ -1,55 +1,9 @@
 'use strict';
-const got = require('got');
-const pluralize = require('pluralize');
 const config = require('./config');
 const copy = require('./copy');
 const Shuffle = require('./schema').Shuffle;
 const Team = require('./schema').Team;
-
-
-function updateShuffleMessage(team, shuffle) {
-    let text = copy.startMessageText;
-
-    if (shuffle.people.length > 0) {
-        let names = shuffle.people.map((person) => `@${person.name}`);
-
-        // Add 'and' between the last two names
-        if (names.length > 1) {
-            const last = names.pop();
-            const secondToLast = names.pop();
-            const lastTwo = `${secondToLast} and ${last}`;
-            names.push(lastTwo);
-        }
-
-        names = names.join(', ');
-
-        text = `${copy.startMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`;
-    }
-
-    got.post('https://slack.com/api/chat.update', {
-        json: true,
-        timeout: 5000,
-        body: {
-            token: team.botAccessToken,
-            ts: shuffle.messageTimestamp,
-            channel: shuffle.channelId,
-            parse: 'full',
-            link_names: 1,
-            text,
-        },
-    })
-    .then((res) => res.body)
-    .then((response) => {
-        if (response.warning) {
-            console.error(response.warning);
-        }
-
-        if (!response.ok) {
-            console.error(response.error);
-            return;
-        }
-    }, (error) => console.error(error));
-}
+const updateShuffleMessage = require('./util').updateShuffleMessage;
 
 
 function joinShuffle(teamId, channelId, user) {

@@ -27,6 +27,8 @@ function startShuffle(teamId, channelId, responseUrl) {
             return;
         }
 
+        const attachments = copy.startMessageButtons.concat(copy.startMessageAttachments);
+
         got.post('https://slack.com/api/chat.postMessage', {
             json: true,
             timeout: 5000,
@@ -34,7 +36,7 @@ function startShuffle(teamId, channelId, responseUrl) {
                 token: team.botAccessToken,
                 channel: channelId,
                 text: copy.startMessageText,
-                attachments: JSON.stringify(copy.startMessageAttachments)
+                attachments: JSON.stringify(attachments)
             },
         })
         .then((res) => res.body)
@@ -135,11 +137,6 @@ function generateRandomGroups(items) {
 }
 
 
-function deactivateShuffle(shuffle) {
-    shuffle.active = false;
-}
-
-
 function finishShuffle(teamId, channelId, responseUrl) {
     Promise.all([
         Team.findById(teamId).exec(),
@@ -167,8 +164,9 @@ function finishShuffle(teamId, channelId, responseUrl) {
             }
         }
 
-        deactivateShuffle(shuffle);
+        util.updateShuffleMessage(team, shuffle, true);
 
+        shuffle.active = false;
         shuffle.save();
     });
 }

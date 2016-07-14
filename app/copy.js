@@ -4,7 +4,7 @@ const config = require('./config');
 
 module.exports = {
     startMessageText: 'Would you like to join the Friday Lunch Shuffle?',
-    startMessageAttachments: [{
+    startMessageButtons: [{
         fallback: 'Your current Slack client doesn‘t support Lunch Shuffle. 😞',
         callback_id: 'start',
         actions: [{
@@ -18,7 +18,8 @@ module.exports = {
             type: 'button',
             style: 'danger',
         }]
-    }, {
+    }],
+    startMessageAttachments: [{
         mrkdwn_in: ['text'],
         title: 'What‘s the Friday Lunch Shuffle?',
         text: `
