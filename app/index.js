@@ -59,7 +59,7 @@ process.on('unhandledRejection', (err) => {
 
 
 const app = koa();
-app.keys = ['$Jqik9oP9ifvewR*evvH']; // Signed cookie keys
+app.keys = config.get('cookiekeys'); // Signed cookie keys
 nunjucks.configure(TEMPLATE_DIR);
 app.use(koaViews(TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
 app.use(koaBodyParser());

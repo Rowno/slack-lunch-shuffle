@@ -3,6 +3,8 @@ baseurl: https://example.com
 port: 8000
 mongouri: mongodb://localhost/lunchshuffle
 password: everybodyshuffling
+cookiekeys:
+    - GHF]ioV7jh9PDX;VchqC
 slack:
     id: 23498654023.96478234093
     secret: dfks8kj405kjgj45lljbadw5m6jkf3o9

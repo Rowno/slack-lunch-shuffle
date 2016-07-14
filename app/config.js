@@ -21,6 +21,7 @@ nconf.required([
     'port',
     'mongouri',
     'password',
+    'cookiekeys',
     'slack:id',
     'slack:secret',
     'slack:verification'
