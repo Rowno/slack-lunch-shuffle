@@ -8,10 +8,6 @@ node_modules: package.json
 	npm install $(NPM_FLAGS)
 	touch node_modules
 
-server: node_modules
-	npm run server
-.PHONY: server
-
 test: node_modules
 	npm run test
 .PHONY: test

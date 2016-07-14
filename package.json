@@ -9,14 +9,12 @@
   "main": "app/index.js",
   "scripts": {
     "start": "node .",
-    "test": "eslint app",
-    "server": "nodemon -e js,html"
+    "test": "eslint app"
   },
   "engines": {
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "@slack/client": "^3.5.0",
     "got": "^6.3.0",
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.2.0",
