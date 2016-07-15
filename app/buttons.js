@@ -59,7 +59,13 @@ function *route() {
         return;
     }
 
-    body = JSON.parse(body);
+    // Protect against malformed JSON
+    try {
+        body = JSON.parse(body);
+    } catch (error) {
+        this.response.status = 400;
+        return;
+    }
 
     if (body.token !== config.get('slack:verification')) {
         this.response.status = 401;
