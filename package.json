@@ -33,7 +33,6 @@
   "devDependencies": {
     "eslint": "^2.13.1",
     "eslint-config-rowno": "^4.0.0",
-    "nodemon": "^1.9.2"
   },
   "files": [
     "app"
