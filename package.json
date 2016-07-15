@@ -1,7 +1,7 @@
 {
   "name": "slack-lunch-shuffle",
   "version": "1.0.0",
-  "description": "Lunch shuffle Slack bot",
+  "description": "A lunch shuffle Slack bot",
   "author": "Roland Warmerdam (https://roland.codes)",
   "keywords": [],
   "repository": "segmentio/slack-lunch-shuffle",
