@@ -22,6 +22,8 @@ nconf.required([
     'mongouri',
     'password',
     'cookiekeys',
+    'groupsize:target',
+    'groupsize:minimum',
     'slack:id',
     'slack:secret',
     'slack:verification'

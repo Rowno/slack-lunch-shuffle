@@ -5,6 +5,9 @@ mongouri: mongodb://localhost/lunchshuffle
 password: everybodyshuffling
 cookiekeys:
     - GHF]ioV7jh9PDX;VchqC
+groupsize:
+    target: 4
+    minimum: 4
 slack:
     # Quoted to make sure they're parsed as strings
     id: '23498654023.96478234093'

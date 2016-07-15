@@ -122,18 +122,18 @@ exports.updateShuffleMessage = updateShuffleMessage;
 
 
 function generateRandomGroups(items) {
-    const MIN_GROUP_SIZE = 4;
-    const GROUP_SIZE = 4;
+    const TARGET = config.get('groupsize:target');
+    const MINIMUM = config.get('groupsize:minimum');
 
     const randomItems = lodashShuffle(items);
 
-    const remaindersNum = randomItems.length % GROUP_SIZE;
+    const remaindersNum = randomItems.length % TARGET;
     const remainders = randomItems.splice(0, remaindersNum);
 
-    const groups = lodashChunk(randomItems, GROUP_SIZE);
+    const groups = lodashChunk(randomItems, TARGET);
 
     if (remaindersNum > 0) {
-        if (remaindersNum < MIN_GROUP_SIZE && groups.length > 0) {
+        if (remaindersNum < MINIMUM && groups.length > 0) {
             let groupIndex = 0;
             while (remainders.length > 0) {
                 groups[groupIndex].push(remainders.pop());
