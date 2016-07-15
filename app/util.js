@@ -45,6 +45,7 @@ function *login(state, session, password) {
 
     state.loggedIn = session.loggedIn;
     state.oauthKey = session.oauthKey;
+    state.slackId = config.get('slack:id');
 }
 exports.login = login;
 
