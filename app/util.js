@@ -1,6 +1,8 @@
 'use strict';
 const crypto = require('crypto');
 const got = require('got');
+const lodashChunk = require('lodash.chunk');
+const lodashShuffle = require('lodash.shuffle');
 const pluralize = require('pluralize');
 const config = require('./config');
 const copy = require('./copy');
@@ -117,3 +119,36 @@ function updateShuffleMessage(team, shuffle, finished) {
     }, (error) => console.error(error));
 }
 exports.updateShuffleMessage = updateShuffleMessage;
+
+
+function generateRandomGroups(items) {
+    const MIN_GROUP_SIZE = 4;
+    const GROUP_SIZE = 4;
+
+    const randomItems = lodashShuffle(items);
+
+    const remaindersNum = randomItems.length % GROUP_SIZE;
+    const remainders = randomItems.splice(0, remaindersNum);
+
+    const groups = lodashChunk(randomItems, GROUP_SIZE);
+
+    if (remaindersNum > 0) {
+        if (remaindersNum < MIN_GROUP_SIZE && groups.length > 0) {
+            let groupIndex = 0;
+            while (remainders.length > 0) {
+                groups[groupIndex].push(remainders.pop());
+
+                if (groupIndex < groups.length - 1) {
+                    groupIndex += 1;
+                } else {
+                    groupIndex = 0;
+                }
+            }
+        } else {
+            groups.push(remainders);
+        }
+    }
+
+    return groups;
+}
+exports.generateRandomGroups = generateRandomGroups;
