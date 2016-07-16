@@ -6,6 +6,12 @@ const Team = require('./schema').Team;
 const updateShuffleMessage = require('./util').updateShuffleMessage;
 
 
+/**
+ * Adds a user to a channel's shuffle.
+ * @param  {strng} teamId
+ * @param  {string} channelId
+ * @param  {object} user Object that contains the user's id and name.
+ */
 function joinShuffle(teamId, channelId, user) {
     Promise.all([
         Team.findById(teamId).exec(),
@@ -26,11 +32,18 @@ function joinShuffle(teamId, channelId, user) {
         shuffle.people.push({ _id: user.id, name: user.name });
         shuffle.save();
 
+        // Update the list of the people in the shuffle message
         updateShuffleMessage(team, shuffle);
     });
 }
 
 
+/**
+ * Remove a user from a channel's shuffle.
+ * @param  {string} teamId
+ * @param  {string} channelId
+ * @param  {object} user Object that contains the user's id and name.
+ */
 function leaveShuffle(teamId, channelId, user) {
     Promise.all([
         Team.findById(teamId).exec(),
@@ -46,12 +59,17 @@ function leaveShuffle(teamId, channelId, user) {
         shuffle.people.id(user.id).remove();
         shuffle.save();
 
+        // Update the list of the people in the shuffle message
         updateShuffleMessage(team, shuffle);
     });
 }
 
 
+/**
+ * Handles the /buttons endpoint
+ */
 function *route() {
+    // For some reason Slack sends this request form encoded
     let body = this.request.body.payload;
 
     if (!body) {
@@ -67,6 +85,7 @@ function *route() {
         return;
     }
 
+    // Verify the request actually came from Slack
     if (body.token !== config.get('slack:verification')) {
         this.response.status = 401;
         return;

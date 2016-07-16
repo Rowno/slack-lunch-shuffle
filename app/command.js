@@ -7,6 +7,12 @@ const Team = require('./schema').Team;
 const Shuffle = require('./schema').Shuffle;
 
 
+/**
+ * Starts a shuffle in a channel.
+ * @param  {string} teamId
+ * @param  {string} channelId
+ * @param  {string} responseUrl Slack Command/Button response_url.
+ */
 function startShuffle(teamId, channelId, responseUrl) {
     Promise.all([
         Team.findById(teamId).exec(),
@@ -27,6 +33,7 @@ function startShuffle(teamId, channelId, responseUrl) {
 
         const attachments = copy.startMessageButtons.concat(copy.startMessageAttachments);
 
+        // Post lunch shuffle message to channel
         got.post('https://slack.com/api/chat.postMessage', {
             json: true,
             timeout: 5000,
@@ -34,7 +41,7 @@ function startShuffle(teamId, channelId, responseUrl) {
                 token: team.botAccessToken,
                 channel: channelId,
                 text: copy.startMessageText,
-                attachments: JSON.stringify(attachments)
+                attachments: JSON.stringify(attachments) // Slack requires them to be JSON encoded
             },
         })
         .then((res) => res.body)
@@ -48,6 +55,7 @@ function startShuffle(teamId, channelId, responseUrl) {
                 return;
             }
 
+            // Save the shuffle with the message timestamp so it can be dynamically updated later
             const shuffle = new Shuffle({
                 teamId: team.id,
                 channelId,
@@ -60,7 +68,13 @@ function startShuffle(teamId, channelId, responseUrl) {
 }
 
 
+/**
+ * Opens a private group chat with users and posts an explaination message.
+ * @param  {Team} team Mongoose Team object.
+ * @param  {array<Person>} users Array of Mongoose Person objects.
+ */
 function openGroupChat(team, users) {
+    // Opens the group chat
     return got.post('https://slack.com/api/mpim.open', {
         json: true,
         timeout: 5000,
@@ -79,6 +93,7 @@ function openGroupChat(team, users) {
             throw new Error(response.error);
         }
 
+        // Post the explaination message into the group chat
         return got.post('https://slack.com/api/chat.postMessage', {
             json: true,
             timeout: 5000,
@@ -103,6 +118,12 @@ function openGroupChat(team, users) {
 }
 
 
+/**
+ * Closes the currently active shuffle in the channel and randomly puts everyone into their lunch groups.
+ * @param  {string} teamId
+ * @param  {string} channelId
+ * @param  {string} responseUrl Slack Command/Button response_url.
+ */
 function finishShuffle(teamId, channelId, responseUrl) {
     Promise.all([
         Team.findById(teamId).exec(),
@@ -121,24 +142,33 @@ function finishShuffle(teamId, channelId, responseUrl) {
             return;
         }
 
+        // You can only open a group chat with 2 people or more!
         if (shuffle.people.length > 1) {
             const groups = util.generateRandomGroups(shuffle.people);
 
+            // Open a private chat for each group
             for (const group of groups) {
-                shuffle.groups.push(group.map((person) => person.name).join(','));
                 openGroupChat(team, group);
+                // Keep a record of the generated groups for debugging purposes
+                shuffle.groups.push(group.map((person) => person.name).join(','));
             }
         }
 
+        // Remove the join message and interactive buttons from the shuffle message
         util.updateShuffleMessage(team, shuffle, true);
 
+        // Close off the shuffle
         shuffle.active = false;
         shuffle.save();
     });
 }
 
 
+/**
+ * Handles the /command endpoint.
+ */
 function *route() {
+    // Verify the request actually came from Slack
     if (this.request.body.token !== config.get('slack:verification')) {
         this.response.status = 401;
         return;

@@ -11,10 +11,9 @@ const TeamSchema = new Schema({
     botAccessToken: { type: String, required: true },
 }, {
     _id: false,
-    timestamps: true,
+    timestamps: true, // Automatically set createdAt and updatedAt fields
 });
 
-// Initialise the collection (table) from the schema
 exports.Team = mongoose.model('Team', TeamSchema);
 
 
@@ -33,8 +32,7 @@ const ShuffleSchema = new Schema({
     people: [PersonSchema],
     groups: [{ type: String }],
 }, {
-    timestamps: true, // Automatically add/update createdAt and updatedAt fields
+    timestamps: true,
 });
 
-// Initialise the collection (table) from the schema
 exports.Shuffle = mongoose.model('Shuffle', ShuffleSchema);

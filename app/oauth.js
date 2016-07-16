@@ -5,6 +5,9 @@ const util = require('./util');
 const Team = require('./schema').Team;
 
 
+/**
+ * Handles the /oauth page
+ */
 function *route() {
     yield util.login(this.state, this.session);
     const code = this.request.query.code;
@@ -61,7 +64,7 @@ function *route() {
         }
     }
 
-    return yield this.render('oauth');
+    yield this.render('oauth');
 }
 
 module.exports = route;

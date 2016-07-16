@@ -14,7 +14,6 @@ const oauthRoute = require('./oauth');
 const commandRoute = require('./command');
 const buttonsRoute = require('./buttons');
 
-
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const TEMPLATE_DIR = path.join(__dirname, 'templates');
 let server;
@@ -24,9 +23,9 @@ mongoose.Promise = global.Promise;
 
 
 /**
- * Gracefully stops the server
+ * Gracefully stops the server.
  *
- * @param {number} exitCode Process exit code
+ * @param {number} exitCode Process exit code.
  */
 function shutdown(exitCode) {
     console.log('Server stopping...');
@@ -84,9 +83,8 @@ app.use(koaRoute.post('/command', commandRoute));
 
 
 console.log('Server starting...');
-mongoose.connect(config.get('mongouri'))
-    .then(() => {
-        server = app.listen(config.get('port'), () => {
-            console.log(`Server started at http://localhost:${config.get('port')}`);
-        });
+mongoose.connect(config.get('mongouri')).then(() => {
+    server = app.listen(config.get('port'), () => {
+        console.log(`Server started at http://localhost:${config.get('port')}`);
     });
+});
