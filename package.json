@@ -4,7 +4,7 @@
   "description": "A lunch shuffle Slack bot",
   "author": "Roland Warmerdam (https://roland.codes)",
   "keywords": [],
-  "repository": "segmentio/slack-lunch-shuffle",
+  "repository": "Rowno/slack-lunch-shuffle",
   "license": "ISC",
   "main": "app/index.js",
   "scripts": {

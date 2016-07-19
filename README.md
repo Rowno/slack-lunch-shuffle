@@ -1,6 +1,6 @@
 # Slack lunch shuffle
 
-[![Dependency Status](https://david-dm.org/segmentio/slack-lunch-shuffle/status.svg)](https://david-dm.org/segmentio/slack-lunch-shuffle)
+[![Dependency Status](https://david-dm.org/Rowno/slack-lunch-shuffle/status.svg)](https://david-dm.org/Rowno/slack-lunch-shuffle)
 
 A lunch shuffle Slack bot.
 
