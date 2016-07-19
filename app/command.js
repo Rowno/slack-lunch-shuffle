@@ -154,12 +154,12 @@ function finishShuffle(teamId, channelId, responseUrl) {
             }
         }
 
-        // Remove the join message and interactive buttons from the shuffle message
-        util.updateShuffleMessage(team, shuffle, true);
-
         // Close off the shuffle
         shuffle.active = false;
         shuffle.save();
+
+        // Remove the join message and interactive buttons from the shuffle message
+        util.updateShuffleMessage(team, shuffle);
     });
 }
 

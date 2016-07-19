@@ -68,7 +68,7 @@ function respond(responseUrl, message) {
 exports.respond = respond;
 
 
-function updateShuffleMessage(team, shuffle, finished) {
+function updateShuffleMessage(team, shuffle) {
     let text = copy.startMessageText;
 
     if (shuffle.people.length > 0) {
@@ -84,14 +84,14 @@ function updateShuffleMessage(team, shuffle, finished) {
 
         names = names.join(', ');
 
-        if (finished) {
-            text = `${names} shuffled!`;
-        } else {
+        if (shuffle.active) {
             text = `${copy.startMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`;
+        } else {
+            text = `${names} shuffled!`;
         }
     }
 
-    const attachments = finished ? JSON.stringify(copy.startMessageAttachments) : null;
+    const attachments = shuffle.active ? null : JSON.stringify(copy.startMessageAttachments);
 
     got.post('https://slack.com/api/chat.update', {
         json: true,
