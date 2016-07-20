@@ -9,8 +9,7 @@ const copy = require('./copy');
 
 
 /**
- * Generates a 20 cryptographically random characters
- *
+ * Generates 20 cryptographically random characters
  * @returns {string}
  */
 function generateKey() {
@@ -29,7 +28,6 @@ exports.generateKey = generateKey;
 
 /**
  * Tries to log in the user to lunch shuffle
- *
  * @param {object} state Koa this.state
  * @param {object} session Koa this.session
  * @param {string} password Password the user entered
@@ -52,6 +50,11 @@ function *login(state, session, password) {
 exports.login = login;
 
 
+/**
+ * Sends a response message to a Slash Command or Interactive Message action
+ * @param {string} responseUrl response_url
+ * @param {string} message New message
+ */
 function respond(responseUrl, message) {
     return got.post(responseUrl, {
         timeout: 5000,
@@ -68,9 +71,15 @@ function respond(responseUrl, message) {
 exports.respond = respond;
 
 
+/**
+ * Dynamically updates the original shuffle message
+ * @param {Team} team
+ * @param {Shuffle} shuffle
+ */
 function updateShuffleMessage(team, shuffle) {
     let text = copy.startMessageText;
 
+    // List the people that have joined the shuffle
     if (shuffle.people.length > 0) {
         let names = shuffle.people.map((person) => `@${person.name}`);
 
@@ -91,8 +100,10 @@ function updateShuffleMessage(team, shuffle) {
         }
     }
 
+    // Remove the interactive buttons when the shuffle has finished
     const attachments = shuffle.active ? null : JSON.stringify(copy.startMessageAttachments);
 
+    // Update the message
     got.post('https://slack.com/api/chat.update', {
         json: true,
         timeout: 5000,
@@ -121,18 +132,28 @@ function updateShuffleMessage(team, shuffle) {
 exports.updateShuffleMessage = updateShuffleMessage;
 
 
+/**
+ * Randomly groups items into groups of the configured size
+ * @param {array} items Array of things to group
+ * @returns {array<array>} Array of item groups (arrays)
+ */
 function generateRandomGroups(items) {
     const TARGET = config.get('groupsize:target');
     const MINIMUM = config.get('groupsize:minimum');
 
+    // Randomise the array
     const randomItems = lodashShuffle(items);
 
+    // Remove the remainders to create even groups
     const remaindersNum = randomItems.length % TARGET;
     const remainders = randomItems.splice(0, remaindersNum);
 
+    // Create groups
     const groups = lodashChunk(randomItems, TARGET);
 
     if (remaindersNum > 0) {
+        // If there's less remainders than the minimum and there's at least 1 group,
+        // spread the remainders evenly across the groups
         if (remaindersNum < MINIMUM && groups.length > 0) {
             let groupIndex = 0;
             while (remainders.length > 0) {
@@ -144,6 +165,7 @@ function generateRandomGroups(items) {
                     groupIndex = 0;
                 }
             }
+        // Else just create a new group from the remainders
         } else {
             groups.push(remainders);
         }

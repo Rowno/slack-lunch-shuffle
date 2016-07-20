@@ -1,15 +1,26 @@
 ---
+# Server base URL
 baseurl: https://example.com
+# Server port
 port: 8000
+# MongoDB URI connection string
 mongouri: mongodb://localhost/lunchshuffle
+# Password used to log into the app
 password: everybodyshuffling
+# Signed cookie keys (used by Keygrip)
 cookiekeys:
     - GHF]ioV7jh9PDX;VchqC
+# Shuffle group size
 groupsize:
+    # Ideal group size
     target: 4
+    # Minimum group size (used when dealing with remainders)
     minimum: 4
+# Slack App Credentials (make sure they're quoted so they're parsed as strings)
 slack:
-    # Quoted to make sure they're parsed as strings
+    # Client ID
     id: '23498654023.96478234093'
+    # Client Secret
     secret: 'dfks8kj405kjgj45lljbadw5m6jkf3o9'
+    # Verification Token
     verification: 'saWgjAmksHasdQIdjsHDjsEQ'
