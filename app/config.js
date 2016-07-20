@@ -25,6 +25,15 @@ nconf.use('yaml', {
 // Load config from config.json file
 nconf.file('json', 'config.json');
 
+nconf.defaults({
+    port: 8000,
+    mongouri: 'mongodb://localhost/lunchshuffle',
+    groupsize: {
+        target: 4,
+        minimum: 4,
+    },
+});
+
 // Make sure all the config variables are set
 nconf.required([
     'baseurl',

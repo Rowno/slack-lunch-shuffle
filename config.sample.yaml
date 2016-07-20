@@ -2,9 +2,9 @@
 # Server base URL
 baseurl: https://example.com
 # Server port
-port: 8000
+port: 8000 # Default
 # MongoDB URI connection string
-mongouri: mongodb://localhost/lunchshuffle
+mongouri: mongodb://localhost/lunchshuffle # Default
 # Password used to log into the app
 password: everybodyshuffling
 # Signed cookie keys (used by Keygrip)
@@ -13,9 +13,9 @@ cookiekeys:
 # Shuffle group size
 groupsize:
     # Ideal group size
-    target: 4
+    target: 4 # Default
     # Minimum group size (used when dealing with remainders)
-    minimum: 4
+    minimum: 4 # Default
 # Slack App Credentials (make sure they're quoted so they're parsed as strings)
 slack:
     # Client ID
