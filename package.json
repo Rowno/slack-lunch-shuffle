@@ -1,7 +1,7 @@
 {
   "name": "slack-lunch-shuffle",
   "version": "1.0.0",
-  "description": "A lunch shuffle Slack bot",
+  "description": "A Slack bot that randomly shuffles people into small lunch groups",
   "author": "Roland Warmerdam (https://roland.codes)",
   "keywords": [],
   "repository": "Rowno/slack-lunch-shuffle",
