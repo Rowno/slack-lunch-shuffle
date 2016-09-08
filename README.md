@@ -28,7 +28,7 @@ Setup
 ### Server
 
  1. Setup server/hosting with a valid SSL certificate (Slack requires HTTPS to send events to the app).
- 1. Duplicate `config.sample.yaml`, rename to `config.yaml` and change the configuration to match your setup (this is where you‘ll want to enter your Slack App‘s credentials). The config can also be specified via a `config.json` file or environment variables (e.g: `SLACK:ID`) if that‘s your jam.
+ 1. Duplicate `config.sample.yaml`, rename to `config.yaml` and change the configuration to match your setup (this is where you‘ll want to enter your Slack App‘s credentials). The config can also be specified via a `config.json` file or environment variables (e.g: `slack_id`) if that‘s your jam.
  1. Upload the files to your server.
  1. Run `npm install --prod`.
  1. Start the Node server by running `node .` in the app‘s root directory.

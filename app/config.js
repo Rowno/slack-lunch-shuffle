@@ -10,7 +10,7 @@ Config priority order:
 */
 
 // Load config from environment variables
-nconf.env();
+nconf.env('_');
 
 // Load config from config.yaml file
 nconf.use('yaml', {
