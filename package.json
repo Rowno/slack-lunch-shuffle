@@ -12,7 +12,7 @@
     "test": "eslint app"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": "6.x.x"
   },
   "dependencies": {
     "got": "^6.3.0",

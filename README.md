@@ -10,7 +10,7 @@ A Slack bot that randomly shuffles people into small lunch groups.
 Dependencies
 ------------
 
- - Node.js 4.*
+ - Node.js 6.*
  - MongoDB 2.6.*
 
 
