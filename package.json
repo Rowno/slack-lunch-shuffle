@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "got": "^6.3.0",
+    "hard-rejection": "^0.1.0",
     "js-yaml": "^3.6.1",
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.2.0",

@@ -1,5 +1,6 @@
 'use strict';
 const path = require('path');
+const hardRejection = require('hard-rejection');
 const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
 const koaHelmet = require('koa-helmet');
@@ -50,15 +51,7 @@ process.on('SIGINT', () => shutdown(0));
 
 
 // Crash on unhandled Promise rejections (will become default behaviour soon https://github.com/nodejs/node/pull/6375)
-process.on('unhandledRejection', (err) => {
-    if (err instanceof Error) {
-        console.error(err.stack);
-    } else {
-        console.error(`Promise rejected with value: ${util.inspect(err)}`);
-    }
-
-    shutdown(1);
-});
+hardRejection();
 
 
 const app = koa();
