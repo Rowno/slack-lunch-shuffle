@@ -13,6 +13,5 @@ test: node_modules
 .PHONY: test
 
 deploy:
-	rsync -avzh --delete --no-owner --no-group --include="/config.yaml" --exclude='/.git' --exclude='.DS_Store' --filter="dir-merge,- .gitignore" . lunch-shuffle@162.243.133.80:/home/lunch-shuffle/files/
-	ssh lunch-shuffle@162.243.133.80 'cd files; make node_modules NODE_ENV=production; kill $$(systemctl -p MainPID show lunch-shuffle | sed -e "s/MainPID=//")'
+    now -e NODE_ENV=production -e baseurl=@baseurl -e mongouri=@mongouri -e password=@password -e cookiekeys=@cookiekeys -e slack_id=@slack_id -e slack_secret=@slack_secret -e slack_verification=@slack_verification
 .PHONY: deploy
