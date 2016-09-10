@@ -1,3 +1,4 @@
+/* eslint-disable no-process-env */
 'use strict';
 const nconf = require('nconf');
 const yaml = require('js-yaml');
@@ -26,6 +27,7 @@ nconf.use('yaml', {
 nconf.file('json', 'config.json');
 
 nconf.defaults({
+    env: process.env.NODE_ENV || 'development',
     port: 8000,
     mongouri: 'mongodb://localhost/lunchshuffle',
     groupsize: {
@@ -36,6 +38,7 @@ nconf.defaults({
 
 // Make sure all the config variables are set
 nconf.required([
+    'env',
     'baseurl',
     'port',
     'mongouri',
