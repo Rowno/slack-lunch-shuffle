@@ -2,6 +2,7 @@
 const path = require('path');
 const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
+const koaHelmet = require('koa-helmet');
 const koaRoute = require('koa-route');
 const koaSession = require('koa-session');
 const koaStatic = require('koa-static');
@@ -69,6 +70,7 @@ if (!Array.isArray(app.keys)) {
 }
 
 nunjucks.configure(TEMPLATE_DIR);
+app.use(koaHelmet());
 app.use(koaStatic(PUBLIC_DIR));
 app.use(koaViews(TEMPLATE_DIR, { map: { html: 'nunjucks' } }));
 app.use(koaBodyParser());
