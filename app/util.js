@@ -1,11 +1,38 @@
 'use strict';
 const crypto = require('crypto');
 const got = require('got');
+const hardRejection = require('hard-rejection');
 const lodashChunk = require('lodash.chunk');
 const lodashShuffle = require('lodash.shuffle');
 const pluralize = require('pluralize');
+const winston = require('winston');
+require('winston-loggly');
 const config = require('./config');
 const copy = require('./copy');
+
+
+if (config.get('loggly:token') &&
+    config.get('loggly:subdomain') &&
+    config.get('env') === 'production') {
+
+    winston.add(winston.transports.Loggly, {
+        tags: ['lunch-shuffle', config.get('env')],
+        handleExceptions: true,
+        humanReadableUnhandledException: true,
+        token: config.get('loggly:token'),
+        subdomain: config.get('loggly:subdomain'),
+        json: true,
+    });
+}
+
+function log(...args) {
+    winston.log(...args);
+}
+exports.log = log;
+
+
+// Crash on unhandled Promise rejections (will become default behaviour soon https://github.com/nodejs/node/pull/6375)
+hardRejection((error) => log('error', error));
 
 
 /**
@@ -14,9 +41,9 @@ const copy = require('./copy');
  */
 function generateKey() {
     return new Promise((resolve, reject) => {
-        crypto.randomBytes(20, (err, buffer) => {
-            if (err) {
-                return reject(err);
+        crypto.randomBytes(20, (error, buffer) => {
+            if (error) {
+                return reject(error);
             }
 
             return resolve(buffer.toString('hex'));
@@ -64,9 +91,9 @@ function respond(responseUrl, message) {
     .then((res) => res.body)
     .then((response) => {
         if (response !== 'ok') {
-            console.error(response);
+            log('error', response);
         }
-    }, (error) => console.error(error));
+    }, (error) => log('error', error));
 }
 exports.respond = respond;
 
@@ -120,14 +147,14 @@ function updateShuffleMessage(team, shuffle) {
     .then((res) => res.body)
     .then((response) => {
         if (response.warning) {
-            console.error(response.warning);
+            log('warn', response.warning);
         }
 
         if (!response.ok) {
-            console.error(response.error);
+            log('error', response.error);
             return;
         }
-    }, (error) => console.error(error));
+    }, (error) => log('error', error));
 }
 exports.updateShuffleMessage = updateShuffleMessage;
 

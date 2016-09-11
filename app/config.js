@@ -30,6 +30,10 @@ nconf.defaults({
     env: process.env.NODE_ENV || 'development',
     port: 8000,
     mongouri: 'mongodb://localhost/lunchshuffle',
+    loggly: {
+        token: false,
+        subdomain: false,
+    },
     groupsize: {
         target: 4,
         minimum: 4,
@@ -42,6 +46,8 @@ nconf.required([
     'baseurl',
     'port',
     'mongouri',
+    'loggly:token',
+    'loggly:subdomain',
     'password',
     'cookiekeys',
     'groupsize:target',

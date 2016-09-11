@@ -47,11 +47,11 @@ function startShuffle(teamId, channelId, responseUrl) {
         .then((res) => res.body)
         .then((response) => {
             if (response.warning) {
-                console.error(response.warning);
+                util.log('warn', response.warning);
             }
 
             if (!response.ok) {
-                console.error(response.error);
+                util.log('error', response.error);
                 return;
             }
 
@@ -63,7 +63,7 @@ function startShuffle(teamId, channelId, responseUrl) {
             });
 
             shuffle.save();
-        }, (error) => console.error(error));
+        }, (error) => util.log('error', error));
     });
 }
 
@@ -86,7 +86,7 @@ function openGroupChat(team, users) {
     .then((res) => res.body)
     .then((response) => {
         if (response.warning) {
-            console.error(response.warning);
+            util.log('warn', response.warning);
         }
 
         if (!response.ok) {
@@ -107,14 +107,14 @@ function openGroupChat(team, users) {
     .then((res) => res.body)
     .then((response) => {
         if (response.warning) {
-            console.error(response.warning);
+            util.log('warn', response.warning);
         }
 
         if (!response.ok) {
             throw new Error(response.error);
         }
     })
-    .catch((error) => console.error(error));
+    .catch((error) => util.log('error', error));
 }
 
 

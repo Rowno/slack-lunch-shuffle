@@ -5,6 +5,10 @@ baseurl: https://example.com
 port: 8000 # Default
 # MongoDB URI connection string
 mongouri: mongodb://localhost/lunchshuffle # Default
+# Loggly config
+loggly:
+    token: false # Default
+    subdomain: false # Default
 # Password used to log into the app
 password: everybodyshuffling
 # Signed cookie keys (used by Keygrip)

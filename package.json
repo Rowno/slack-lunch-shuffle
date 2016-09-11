@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "A Slack bot that randomly shuffles people into small lunch groups",
   "author": "Roland Warmerdam (https://roland.codes)",
-  "keywords": [],
   "repository": "Rowno/slack-lunch-shuffle",
   "license": "ISC",
   "main": "app/index.js",
@@ -30,7 +29,9 @@
     "mongoose": "^4.5.3",
     "nconf": "^0.8.4",
     "nunjucks": "^2.4.2",
-    "pluralize": "^3.0.0"
+    "pluralize": "^3.0.0",
+    "winston": "^2.2.0",
+    "winston-loggly": "^1.3.1"
   },
   "devDependencies": {
     "eslint": "^2.13.1",

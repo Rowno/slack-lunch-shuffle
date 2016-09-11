@@ -1,6 +1,5 @@
 'use strict';
 const path = require('path');
-const hardRejection = require('hard-rejection');
 const koa = require('koa');
 const koaBodyParser = require('koa-bodyparser');
 const koaHelmet = require('koa-helmet');
@@ -30,11 +29,11 @@ mongoose.Promise = global.Promise;
  * @param {number} exitCode Process exit code.
  */
 function shutdown(exitCode) {
-    console.log('Server stopping...');
+    util.log('info', 'Server stopping...');
 
     server.close(() => {
         mongoose.disconnect(() => {
-            console.log('Server stopped');
+            util.log('info', 'Server stopped');
         });
     });
 
@@ -50,10 +49,6 @@ process.on('SIGTERM', () => shutdown(0));
 process.on('SIGINT', () => shutdown(0));
 
 
-// Crash on unhandled Promise rejections (will become default behaviour soon https://github.com/nodejs/node/pull/6375)
-hardRejection();
-
-
 const app = koa();
 
 // Signed cookie keys
@@ -61,6 +56,8 @@ app.keys = config.get('cookiekeys');
 if (!Array.isArray(app.keys)) {
     app.keys = [app.keys];
 }
+
+app.on('error', (error) => util.log('error', error));
 
 nunjucks.configure(TEMPLATE_DIR);
 app.use(koaHelmet());
@@ -83,9 +80,9 @@ app.use(koaRoute.post('/buttons', buttonsRoute));
 app.use(koaRoute.post('/command', commandRoute));
 
 
-console.log('Server starting...');
+util.log('info', 'Server starting...');
 mongoose.connect(config.get('mongouri')).then(() => {
     server = app.listen(config.get('port'), () => {
-        console.log(`Server started at http://localhost:${config.get('port')}`);
+        util.log('info', `Server started at http://localhost:${config.get('port')}`);
     });
 });

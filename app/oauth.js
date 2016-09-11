@@ -41,7 +41,7 @@ function *route() {
         .catch((error) => ({ ok: false, error }));
 
         if (response.warning) {
-            console.error(response.warning);
+            util.log('warn', response.warning);
         }
 
         if (response.ok) {
@@ -60,7 +60,7 @@ function *route() {
 
             this.state.success = true;
         } else {
-            console.error(response.error);
+            util.log('error', response.error);
         }
     }
 
