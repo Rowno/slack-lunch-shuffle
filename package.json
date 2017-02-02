@@ -5,6 +5,7 @@
   "author": "Roland Warmerdam (https://roland.codes)",
   "repository": "Rowno/slack-lunch-shuffle",
   "license": "ISC",
+  "private": true,
   "main": "app/index.js",
   "scripts": {
     "start": "node .",
@@ -40,5 +41,18 @@
   "files": [
     "app"
   ],
-  "private": true
+  "now": {
+    "env": {
+      "NODE_ENV": "production",
+      "baseurl": "@baseurl",
+      "mongouri": "@mongouri",
+      "loggly_token": "@loggly_token",
+      "loggly_subdomain": "@loggly_subdomain",
+      "password": "@password",
+      "cookiekeys": "@cookiekeys",
+      "slack_id": "@slack_id",
+      "slack_secret": "@slack_secret",
+      "slack_verification": "@slack_verification"
+    }
+  }
 }
