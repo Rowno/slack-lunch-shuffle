@@ -1,11 +1,5 @@
-NODE_ENV ?= development
-
-ifeq ($(NODE_ENV),production)
-    NPM_FLAGS := --prod
-endif
-
 node_modules: package.json
-	npm install $(NPM_FLAGS)
+	npm install
 	touch node_modules
 
 test: node_modules
