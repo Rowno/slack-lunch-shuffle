@@ -5,7 +5,7 @@ const config = require('./config')
 module.exports = {
   startMessageText: 'Would you like to join the Friday Lunch Shuffle?',
   startMessageButtons: [{
-    fallback: 'Your current Slack client doesn‘t support Lunch Shuffle. 😞',
+    fallback: 'Your current Slack client doesn’t support Lunch Shuffle. 😞',
     callback_id: 'start',
     actions: [{
       name: 'join',
@@ -21,7 +21,7 @@ module.exports = {
   }],
   startMessageAttachments: [{
     mrkdwn_in: ['text'],
-    title: 'What‘s the Friday Lunch Shuffle?',
+    title: 'What’s the Friday Lunch Shuffle?',
     text: `
 When you opt-in to the Friday Lunch Shuffle your name goes into a virtual hat with everybody else who signs up that day, and just before All-Hands your name will be pulled along with three other names...
 
@@ -41,11 +41,11 @@ Try it!`
     fallback: 'Everybody shuffling!',
     image_url: `${config.get('baseurl')}/images/shuffle.gif`
   }],
-  notSetup: 'Sorry, it looks your team isn‘t setup on Lunch Shuffle.',
-  alreadyActiveInChannel: 'There‘s already a lunch shuffle running in this channel.',
-  noShuffleActiveInChannel: 'There‘s no shuffle running in this channel.',
+  notSetup: 'Sorry, it looks your team isn’t setup on Lunch Shuffle.',
+  alreadyActiveInChannel: 'There’s already a lunch shuffle running in this channel.',
+  noShuffleActiveInChannel: 'There’s no shuffle running in this channel.',
   noopButton: 'Oops, it looks like this button does nothing! 😅',
-  invalidSubcommand: 'Sorry, I didn‘t recognise that subcommand. Valid subcommands are `start`, `finish` and `cancel`.',
-  groupChatMessageText: 'Here‘s your Friday Lunch Shuffle group! Enjoy!',
-  cancelledMessageText: 'Sorry, today‘s Lunch Shuffle was cancelled. 😞'
+  invalidSubcommand: 'Sorry, I didn’t recognise that subcommand. Valid subcommands are `start`, `finish` and `cancel`.',
+  groupChatMessageText: 'Here’s your Friday Lunch Shuffle group! Enjoy!',
+  cancelledMessageText: 'Sorry, today’s Lunch Shuffle was cancelled. 😞'
 }
