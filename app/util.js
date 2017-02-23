@@ -99,8 +99,10 @@ exports.respond = respond
 function updateShuffleMessage(team, shuffle) {
   let text = copy.startMessageText
 
-  // List the people that have joined the shuffle
-  if (shuffle.people.length > 0) {
+  if (shuffle.cancelled) {
+    text = copy.cancelledMessageText
+  } else if (shuffle.people.length > 0) {
+    // List the people that have joined the shuffle
     let names = shuffle.people.map(person => `@${person.name}`)
 
     // Add 'and' between the last two names
@@ -113,9 +115,7 @@ function updateShuffleMessage(team, shuffle) {
 
     names = names.join(', ')
 
-    if (shuffle.cancelled) {
-      text = copy.cancelledMessageText
-    } else if (shuffle.active) {
+    if (shuffle.active) {
       text = `${copy.startMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`
     } else {
       text = `${names} shuffled!`
