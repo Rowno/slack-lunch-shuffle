@@ -7,5 +7,5 @@ server: node_modules
 .PHONY: server
 
 test: node_modules
-	npm run test
+	npm test
 .PHONY: test
