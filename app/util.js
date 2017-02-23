@@ -113,7 +113,9 @@ function updateShuffleMessage(team, shuffle) {
 
     names = names.join(', ')
 
-    if (shuffle.active) {
+    if (shuffle.cancelled) {
+      text = copy.cancelledMessageText
+    } else if (shuffle.active) {
       text = `${copy.startMessageText} ${names} ${pluralize('has', shuffle.people.length)} already joined!`
     } else {
       text = `${names} shuffled!`

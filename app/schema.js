@@ -27,6 +27,7 @@ const ShuffleSchema = new Schema({
   teamId: {type: String, required: true},
   channelId: {type: String, required: true},
   active: {type: Boolean, required: true, default: true},
+  cancelled: {type: Boolean, required: true, default: false},
   messageTimestamp: {type: String, required: true},
   people: [PersonSchema],
   groups: [{type: String}]

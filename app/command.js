@@ -161,6 +161,40 @@ function finishShuffle(teamId, channelId, responseUrl) {
 }
 
 /**
+ * Cancels the currently active shuffle in the channel.
+ * @param  {string} teamId
+ * @param  {string} channelId
+ * @param  {string} responseUrl Slack Command/Button response_url.
+ */
+function cancelShuffle(teamId, channelId, responseUrl) {
+  Promise.all([
+    Team.findById(teamId).exec(),
+    Shuffle.findOne({teamId, channelId, active: true}).exec()
+  ]).then(values => {
+    const team = values[0]
+    const shuffle = values[1]
+
+    if (!team) {
+      util.respond(responseUrl, {text: copy.notSetup})
+      return
+    }
+
+    if (!shuffle) {
+      util.respond(responseUrl, {text: copy.noShuffleActiveInChannel})
+      return
+    }
+
+    // Cancel the shuffle
+    shuffle.active = false
+    shuffle.cancelled = true
+    shuffle.save()
+
+    // Remove the join message and interactive buttons from the shuffle message
+    util.updateShuffleMessage(team, shuffle)
+  })
+}
+
+/**
  * Handles the /command endpoint.
  */
 function * route() { // eslint-disable-line require-yield
@@ -181,6 +215,9 @@ function * route() { // eslint-disable-line require-yield
   } else if (subcommand === 'finish') {
     this.body = ''
     finishShuffle(teamId, channelId, responseUrl)
+  } else if (subcommand === 'cancel') {
+    this.body = ''
+    cancelShuffle(teamId, channelId, responseUrl)
   } else {
     this.body = copy.invalidSubcommand
   }

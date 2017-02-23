@@ -45,6 +45,7 @@ Try it!`
   alreadyActiveInChannel: 'There‘s already a lunch shuffle running in this channel.',
   noShuffleActiveInChannel: 'There‘s no shuffle running in this channel.',
   noopButton: 'Oops, it looks like this button does nothing! 😅',
-  invalidSubcommand: 'Sorry, I didn‘t recognise that subcommand. Valid subcommands are `start` and `finish`.',
-  groupChatMessageText: 'Here‘s your Friday Lunch Shuffle group! Enjoy!'
+  invalidSubcommand: 'Sorry, I didn‘t recognise that subcommand. Valid subcommands are `start`, `finish` and `cancel`.',
+  groupChatMessageText: 'Here‘s your Friday Lunch Shuffle group! Enjoy!',
+  cancelledMessageText: 'Sorry, today‘s Lunch Shuffle was cancelled. 😞'
 }
