@@ -49,12 +49,13 @@ function leaveShuffle(teamId, channelId, user) {
   ]).then(values => {
     const team = values[0]
     const shuffle = values[1]
+    const person = shuffle.people.id(user.id)
 
-    if (!team || !shuffle) {
+    if (!team || !shuffle || !person) {
       return
     }
 
-    shuffle.people.id(user.id).remove()
+    person.remove()
     shuffle.save()
 
     // Update the list of the people in the shuffle message
