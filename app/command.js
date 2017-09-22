@@ -197,29 +197,29 @@ function cancelShuffle(teamId, channelId, responseUrl) {
 /**
  * Handles the /command endpoint.
  */
-function * route() { // eslint-disable-line require-yield
+async function route(ctx) {
   // Verify the request actually came from Slack
-  if (this.request.body.token !== config.get('slack:verification')) {
-    this.response.status = 401
+  if (ctx.request.body.token !== config.get('slack:verification')) {
+    ctx.response.status = 401
     return
   }
 
-  const subcommand = this.request.body.text
-  const teamId = this.request.body.team_id
-  const channelId = this.request.body.channel_id
-  const responseUrl = this.request.body.response_url
+  const subcommand = ctx.request.body.text
+  const teamId = ctx.request.body.team_id
+  const channelId = ctx.request.body.channel_id
+  const responseUrl = ctx.request.body.response_url
 
   if (subcommand === 'start') {
-    this.body = ''
+    ctx.body = ''
     startShuffle(teamId, channelId, responseUrl)
   } else if (subcommand === 'finish') {
-    this.body = ''
+    ctx.body = ''
     finishShuffle(teamId, channelId, responseUrl)
   } else if (subcommand === 'cancel') {
-    this.body = ''
+    ctx.body = ''
     cancelShuffle(teamId, channelId, responseUrl)
   } else {
-    this.body = copy.invalidSubcommand
+    ctx.body = copy.invalidSubcommand
   }
 }
 

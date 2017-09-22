@@ -1,6 +1,6 @@
 'use strict'
 const path = require('path')
-const koa = require('koa')
+const Koa = require('koa')
 const koaBodyParser = require('koa-bodyparser')
 const koaHelmet = require('koa-helmet')
 const koaRoute = require('koa-route')
@@ -46,7 +46,7 @@ process.on('SIGTERM', () => shutdown(0))
 // Interrupt signal sent by Ctrl+C
 process.on('SIGINT', () => shutdown(0))
 
-const app = koa()
+const app = new Koa()
 
 // Signed cookie keys
 app.keys = config.get('cookiekeys')
@@ -63,10 +63,10 @@ app.use(koaViews(TEMPLATE_DIR, {map: {html: 'nunjucks'}}))
 app.use(koaBodyParser())
 app.use(koaSession(app))
 
-function * home() {
-  yield util.login(this.state, this.session, this.request.body.password)
+async function home(ctx) {
+  await util.login(ctx.state, ctx.session, ctx.request.body.password)
 
-  yield this.render('home')
+  await ctx.render('home')
 }
 
 app.use(koaRoute.get('/', home))

@@ -7,25 +7,25 @@ const Team = require('./schema').Team
 /**
  * Handles the /oauth page
  */
-function * route() {
-  yield util.login(this.state, this.session)
-  const code = this.request.query.code
-  const oauthKey = this.request.query.state
+async function route(ctx) {
+  await util.login(ctx.state, ctx.session)
+  const code = ctx.request.query.code
+  const oauthKey = ctx.request.query.state
 
   // If you don't have all these things you probably shouldn't be here
-  if (!this.state.loggedIn ||
-      !this.state.oauthKey ||
+  if (!ctx.state.loggedIn ||
+      !ctx.state.oauthKey ||
       !oauthKey ||
       !code) {
-    return this.redirect('/')
+    return ctx.redirect('/')
   }
 
-  this.state.success = false
+  ctx.state.success = false
 
   // Check that the oauth request is legit using the oauthKey generated on login
-  if (oauthKey === this.state.oauthKey) {
+  if (oauthKey === ctx.state.oauthKey) {
     // Get the access token
-    const response = yield got('https://slack.com/api/oauth.access', {
+    const response = await got('https://slack.com/api/oauth.access', {
       json: true,
       timeout: 5000,
       query: {
@@ -46,7 +46,7 @@ function * route() {
 
     if (response.ok) {
       // Add or update the team
-      yield Team.findByIdAndUpdate(
+      await Team.findByIdAndUpdate(
         response.team_id, {
           _id: response.team_id,
           name: response.team_name,
@@ -58,13 +58,13 @@ function * route() {
         }
       ).exec()
 
-      this.state.success = true
+      ctx.state.success = true
     } else {
       util.log('error', response.error)
     }
   }
 
-  yield this.render('oauth')
+  await ctx.render('oauth')
 }
 
 module.exports = route

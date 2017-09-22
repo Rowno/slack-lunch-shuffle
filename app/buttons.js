@@ -66,12 +66,12 @@ function leaveShuffle(teamId, channelId, user) {
 /**
  * Handles the /buttons endpoint
  */
-function * route() { // eslint-disable-line require-yield
+async function route(ctx) {
   // For some reason Slack sends this request form encoded
-  let body = this.request.body.payload
+  let body = ctx.request.body.payload
 
   if (!body) {
-    this.response.status = 400
+    ctx.response.status = 400
     return
   }
 
@@ -79,13 +79,13 @@ function * route() { // eslint-disable-line require-yield
   try {
     body = JSON.parse(body)
   } catch (err) {
-    this.response.status = 400
+    ctx.response.status = 400
     return
   }
 
   // Verify the request actually came from Slack
   if (body.token !== config.get('slack:verification')) {
-    this.response.status = 401
+    ctx.response.status = 401
     return
   }
 
@@ -96,13 +96,13 @@ function * route() { // eslint-disable-line require-yield
   const user = body.user
 
   if (callback === 'start' && action === 'join') {
-    this.body = ''
+    ctx.body = ''
     joinShuffle(teamId, channelId, user)
   } else if (callback === 'start' && action === 'leave') {
-    this.body = ''
+    ctx.body = ''
     leaveShuffle(teamId, channelId, user)
   } else {
-    this.body = {
+    ctx.body = {
       replace_original: false, // eslint-disable-line camelcase
       text: copy.noopButton
     }

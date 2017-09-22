@@ -50,11 +50,11 @@ exports.generateKey = generateKey
 
 /**
  * Tries to log in the user to lunch shuffle
- * @param {object} state Koa this.state
- * @param {object} session Koa this.session
+ * @param {object} state Koa ctx.state
+ * @param {object} session Koa ctx.session
  * @param {string} password Password the user entered
  */
-function * login(state, session, password) {
+async function login(state, session, password) {
   // Check against hard coded password 😆
   if (password === config.get('password')) {
     session.loggedIn = true
@@ -62,7 +62,7 @@ function * login(state, session, password) {
 
   // Generate a key for validating the Slack oauth response
   if (session.loggedIn && !session.oauthKey) {
-    session.oauthKey = yield generateKey()
+    session.oauthKey = await generateKey()
   }
 
   state.loggedIn = session.loggedIn
@@ -147,7 +147,6 @@ function updateShuffleMessage(team, shuffle) {
 
     if (!response.ok) {
       log('error', response.error)
-      return
     }
   }, error => log('error', error))
 }
