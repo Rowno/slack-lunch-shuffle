@@ -76,7 +76,7 @@ app.use(koaRoute.post('/buttons', buttonsRoute))
 app.use(koaRoute.post('/command', commandRoute))
 
 util.log('info', 'Server starting...')
-mongoose.connect(config.get('mongouri')).then(() => {
+mongoose.connect(config.get('mongouri'), {useMongoClient: true}).then(() => {
   server = app.listen(config.get('port'), () => {
     util.log('info', `Server started at http://localhost:${config.get('port')}`)
   })
