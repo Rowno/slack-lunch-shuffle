@@ -46,11 +46,11 @@ function startShuffle(teamId, channelId, responseUrl) {
     .then(res => res.body)
     .then(response => {
       if (response.warning) {
-        util.log('warn', response.warning)
+        util.log('warn', new Error(response.warning))
       }
 
       if (!response.ok) {
-        util.log('error', response.error)
+        util.log('error', new Error(response.error))
         return
       }
 
@@ -84,7 +84,7 @@ function openGroupChat(team, users) {
   .then(res => res.body)
   .then(response => {
     if (response.warning) {
-      util.log('warn', response.warning)
+      util.log('warn', new Error(response.warning))
     }
 
     if (!response.ok) {
@@ -105,7 +105,7 @@ function openGroupChat(team, users) {
   .then(res => res.body)
   .then(response => {
     if (response.warning) {
-      util.log('warn', response.warning)
+      util.log('warn', new Error(response.warning))
     }
 
     if (!response.ok) {

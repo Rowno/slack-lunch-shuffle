@@ -41,7 +41,7 @@ async function route(ctx) {
     .catch(err => ({ok: false, err}))
 
     if (response.warning) {
-      util.log('warn', response.warning)
+      util.log('warn', new Error(response.warning))
     }
 
     if (response.ok) {
@@ -60,7 +60,7 @@ async function route(ctx) {
 
       ctx.state.success = true
     } else {
-      util.log('error', response.error)
+      util.log('error', new Error(response.error))
     }
   }
 
