@@ -38,7 +38,9 @@
     "xo": "^0.18.2"
   },
   "files": [
-    "app"
+    "app",
+    "config.yaml",
+    "yarn.lock"
   ],
   "xo": {
     "esnext": true,
@@ -47,16 +49,7 @@
   },
   "now": {
     "env": {
-      "NODE_ENV": "production",
-      "baseurl": "@baseurl",
-      "mongouri": "@mongouri",
-      "loggly_token": "@loggly_token",
-      "loggly_subdomain": "@loggly_subdomain",
-      "password": "@password",
-      "cookiekeys": "@cookiekeys",
-      "slack_id": "@slack_id",
-      "slack_secret": "@slack_secret",
-      "slack_verification": "@slack_verification"
+      "NODE_ENV": "production"
     }
   }
 }
