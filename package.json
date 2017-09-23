@@ -15,7 +15,7 @@
     "node": "^8.0.0"
   },
   "dependencies": {
-    "got": "^6.3.0",
+    "got": "^7.1.0",
     "hard-rejection": "^1.0.0",
     "js-yaml": "^3.10.0",
     "koa": "^2.3.0",

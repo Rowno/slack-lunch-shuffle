@@ -128,6 +128,7 @@ function updateShuffleMessage(team, shuffle) {
   // Update the message
   got.post('https://slack.com/api/chat.update', {
     json: true,
+    form: true,
     timeout: 5000,
     body: {
       token: team.botAccessToken,

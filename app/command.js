@@ -35,6 +35,7 @@ function startShuffle(teamId, channelId, responseUrl) {
     // Post lunch shuffle message to channel
     got.post('https://slack.com/api/chat.postMessage', {
       json: true,
+      form: true,
       timeout: 5000,
       body: {
         token: team.botAccessToken,
@@ -75,6 +76,7 @@ function openGroupChat(team, users) {
   // Opens the group chat
   return got.post('https://slack.com/api/mpim.open', {
     json: true,
+    form: true,
     timeout: 5000,
     body: {
       token: team.botAccessToken,
@@ -94,6 +96,7 @@ function openGroupChat(team, users) {
     // Post the explaination message into the group chat
     return got.post('https://slack.com/api/chat.postMessage', {
       json: true,
+      form: true,
       timeout: 5000,
       body: {
         token: team.botAccessToken,

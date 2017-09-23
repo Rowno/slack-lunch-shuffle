@@ -27,6 +27,7 @@ async function route(ctx) {
     // Get the access token
     const response = await got('https://slack.com/api/oauth.access', {
       json: true,
+      form: true,
       timeout: 5000,
       query: {
          /* eslint-disable camelcase */
